@@ -14,26 +14,29 @@ export default function App() {
     },
     components: {
       Box: {
-        baseStyle: (props: any) => {
-          return {
-            _light: { backgroundColor: 'indigo.900' },
-            _dark: { backgroundColor: 'indigo.200' },
-          }
+        variants: {
+          // Adding new variant
+          layout: () => {
+            return {
+              _light: { backgroundColor: 'indigo.200' },
+              _dark: { backgroundColor: 'indigo.900' },
+            }
+          },
         },
       },
       Heading: {
         baseStyle: (props: any) => {
           return {
-            _light: { color: 'white' },
-            _dark: { color: 'indigo.900' },
+            _light: { color: 'indigo.900' },
+            _dark: { color: 'white' },
           }
         },
       },
       Text: {
         baseStyle: (props: any) => {
           return {
-            _light: { color: 'white' },
-            _dark: { color: 'indigo.900' },
+            _light: { color: 'indigo.900' },
+            _dark: { color: 'white' },
           }
         },
       },

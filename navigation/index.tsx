@@ -45,10 +45,13 @@ function BottomTabNavigator() {
       screenOptions={{
         tabBarStyle: {
           backgroundColor,
-          minHeight: 90,
+          opacity: 0.9,
           borderTopWidth: 0,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
         },
-        tabBarIconStyle: {},
         tabBarActiveTintColor: 'white',
         headerShown: false,
       }}
