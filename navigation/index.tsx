@@ -10,16 +10,37 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useColorModeValue } from 'native-base'
 
-import ModalScreen from '../screens/ModalScreen'
+import Episodes from '../screens/Episodes'
 import NotFoundScreen from '../screens/NotFoundScreen'
+import Player from '../screens/Player'
 import Podcasts from '../screens/Podcasts'
-import TabTwoScreen from '../screens/Proile'
+import ProfileTab from '../screens/Profile'
 import {
+  PodcastStackParamList,
   RootStackParamList,
   RootTabParamList,
   RootTabScreenProps,
 } from '../types'
 import LinkingConfiguration from './LinkingConfiguration'
+
+const PodcastNavigator = createNativeStackNavigator<PodcastStackParamList>()
+
+function PodcastsStack() {
+  return (
+    <PodcastNavigator.Navigator initialRouteName="Podcasts">
+      <PodcastNavigator.Screen
+        name="Podcasts"
+        component={Podcasts}
+        options={{ headerShown: false }}
+      />
+      <PodcastNavigator.Screen
+        name="Episodes"
+        component={Episodes}
+        options={{ headerShown: false }}
+      />
+    </PodcastNavigator.Navigator>
+  )
+}
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -35,13 +56,14 @@ function TabBarIcon(props: {
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
+
 const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 function BottomTabNavigator() {
   const backgroundColor = useColorModeValue('#312e81', '#312e81')
   return (
     <BottomTab.Navigator
-      initialRouteName="Podcasts"
+      initialRouteName="PodcastStack"
       screenOptions={{
         tabBarStyle: {
           backgroundColor,
@@ -57,9 +79,9 @@ function BottomTabNavigator() {
       }}
     >
       <BottomTab.Screen
-        name="Podcasts"
-        component={Podcasts}
-        options={({ navigation }: RootTabScreenProps<'Podcasts'>) => ({
+        name="PodcastStack"
+        component={PodcastsStack}
+        options={({ navigation }: RootTabScreenProps<'PodcastStack'>) => ({
           title: 'Podcasts',
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="podcast" color={color} />
@@ -67,8 +89,8 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="Profile"
-        component={TabTwoScreen}
+        name="ProfileTab"
+        component={ProfileTab}
         options={{
           title: 'My Profile',
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
@@ -97,9 +119,9 @@ function RootNavigator() {
         component={NotFoundScreen}
         options={{ title: 'Oops!' }}
       />
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
+      <PodcastNavigator.Group screenOptions={{ presentation: 'modal' }}>
+        <PodcastNavigator.Screen name="Player" component={Player} />
+      </PodcastNavigator.Group>
     </Stack.Navigator>
   )
 }

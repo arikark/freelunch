@@ -1,13 +1,17 @@
 import React from 'react'
-import { Box, FlatList, Heading, useColorMode } from 'native-base'
-
 import {
-  PodcastMenuItem,
-  PodcastMenuItemProps,
-} from '../components/PodcastMenuItem'
+  ArrowBackIcon,
+  Box,
+  Heading,
+  HStack,
+  IconButton,
+  useColorMode,
+} from 'native-base'
+
+import { PodcastMenuItemProps } from '../components/PodcastMenuItem'
 import { PodcastStackScreenProps } from '../types'
 
-const podcasts: PodcastMenuItemProps[] = [
+const episodes: PodcastMenuItemProps[] = [
   {
     title: 'The Daily',
     category: 'News',
@@ -82,25 +86,34 @@ const podcasts: PodcastMenuItemProps[] = [
   },
 ]
 
-export default function Podcasts({
+export default function Episodes({
   navigation,
-}: PodcastStackScreenProps<'Podcasts'>) {
-  const { toggleColorMode } = useColorMode()
+  route,
+}: PodcastStackScreenProps<'Episodes'>) {
+  const { title } = route.params
+
   return (
     <Box h="100%" paddingX={4} safeAreaTop safeAreaX variant="layout">
-      <Heading>Podcasts</Heading>
+      <HStack alignItems="center">
+        <IconButton
+          icon={<ArrowBackIcon />}
+          onPress={() => navigation.goBack()}
+          mr={4}
+        />
+        <Heading>{title}</Heading>
+      </HStack>
 
-      <FlatList
-        data={podcasts}
+      {/* <FlatList
+        data={episodes}
         renderItem={({ item, index }) => (
           <PodcastMenuItem
             {...item}
-            mb={index === podcasts.length - 1 ? '30%' : 0}
+            mb={index === episodes.length - 1 ? '30%' : 0}
           />
         )}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => item.title.toString()}
-      />
+      /> */}
     </Box>
   )
 }

@@ -15,14 +15,15 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       Root: {
         screens: {
-          Podcasts: {
+          PodcastStack: {
             screens: {
-              PodcastsScreen: 'podcasts',
+              Podcasts: 'podcasts',
+              Episodes: 'episodes',
             },
           },
-          Profile: {
+          ProfileTab: {
             screens: {
-              ProfileScreen: 'profile',
+              Profile: 'profile',
             },
           },
         },

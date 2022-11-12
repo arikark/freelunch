@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react'
+import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
 import {
   Badge,
@@ -37,10 +38,11 @@ export function PodcastMenuItem({
 
   // Get relative date
   const formattedDate = moment(dateCreated).fromNow()
+  const { navigate } = useNavigation()
 
   return (
     <Box alignItems="center" mt={4} {...props}>
-      <Pressable maxW="96">
+      <Pressable maxW="96" onPress={() => navigate('Episodes', { title })}>
         {({ isHovered, isFocused, isPressed }) => {
           return (
             <Box

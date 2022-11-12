@@ -10,21 +10,21 @@ import {
 } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
-export type RootTabParamList = {
+export type PodcastStackParamList = {
   Podcasts: undefined
-  Profile: undefined
+  Episodes: { title: string }
+  Player: undefined
+}
+
+export type RootTabParamList = {
+  PodcastStack: NavigatorScreenParams<PodcastStackParamList> | undefined
+  ProfileTab: undefined
 }
 
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined
   Modal: undefined
   NotFound: undefined
-}
-
-declare global {
-  namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
-  }
 }
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
@@ -35,3 +35,23 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
     BottomTabScreenProps<RootTabParamList, Screen>,
     NativeStackScreenProps<RootStackParamList>
   >
+
+export type PodcastStackScreenProps<
+  Screen extends keyof PodcastStackParamList
+> = CompositeScreenProps<
+  NativeStackScreenProps<PodcastStackParamList, Screen>,
+  CompositeScreenProps<
+    BottomTabScreenProps<RootTabParamList, 'PodcastStack'>,
+    NativeStackScreenProps<RootStackParamList>
+  >
+>
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+
+    interface RootParamList extends RootTabParamList {}
+
+    interface RootParamList extends PodcastStackParamList {}
+  }
+}
