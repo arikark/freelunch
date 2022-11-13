@@ -2,6 +2,7 @@ import React from 'react'
 import {
   ArrowBackIcon,
   Box,
+  FlatList,
   Heading,
   HStack,
   IconButton,
@@ -10,79 +11,19 @@ import {
 
 import { PodcastMenuItemProps } from '../components/PodcastMenuItem'
 import { PodcastStackScreenProps } from '../types'
+import {
+  EpisodeMenuItem,
+  EpisodeMenuItemProps,
+} from '../components/EpisodeMenuItem'
 
-const episodes: PodcastMenuItemProps[] = [
+const episodes: EpisodeMenuItemProps[] = [
   {
-    title: 'The Daily',
-    category: 'News',
-    description:
-      'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
-    image: 'https://wallpaperaccess.com/full/317501.jpg',
-    dateCreated: '2022-11-09 00:00:00',
-    durationInSeconds: 7200,
-  },
-  {
-    title: 'The Daily',
-    category: 'News',
+    title: 'How Democrats Can Win',
     description:
       'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
     image: 'https://wallpaperaccess.com/full/317501.jpg',
     dateCreated: '2020-01-01',
-    durationInSeconds: 300,
-  },
-  {
-    title: 'The Daily',
-    category: 'News',
-    description:
-      'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
-    image: 'https://wallpaperaccess.com/full/317501.jpg',
-    dateCreated: '2020-01-01',
-    durationInSeconds: 120,
-  },
-  {
-    title: 'The Daily',
-    category: 'News',
-    description:
-      'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
-    image: 'https://wallpaperaccess.com/full/317501.jpg',
-    dateCreated: '2020-01-01',
-    durationInSeconds: 120,
-  },
-  {
-    title: 'The Daily',
-    category: 'News',
-    description:
-      'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
-    image: 'https://wallpaperaccess.com/full/317501.jpg',
-    dateCreated: '2020-01-01',
-    durationInSeconds: 120,
-  },
-  {
-    title: 'The Daily',
-    category: 'News',
-    description:
-      'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
-    image: 'https://wallpaperaccess.com/full/317501.jpg',
-    dateCreated: '2020-01-01',
-    durationInSeconds: 120,
-  },
-  {
-    title: 'The Daily',
-    category: 'News',
-    description:
-      'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
-    image: 'https://wallpaperaccess.com/full/317501.jpg',
-    dateCreated: '2020-01-01',
-    durationInSeconds: 120,
-  },
-  {
-    title: 'The Daily',
-    category: 'News',
-    description:
-      'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
-    image: 'https://wallpaperaccess.com/full/317501.jpg',
-    dateCreated: '2020-01-01',
-    durationInSeconds: 120,
+    durationInSeconds: 1200,
   },
 ]
 
@@ -103,17 +44,17 @@ export default function Episodes({
         <Heading>{title}</Heading>
       </HStack>
 
-      {/* <FlatList
+      <FlatList
         data={episodes}
         renderItem={({ item, index }) => (
-          <PodcastMenuItem
+          <EpisodeMenuItem
             {...item}
             mb={index === episodes.length - 1 ? '30%' : 0}
           />
         )}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => item.title.toString()}
-      /> */}
+      />
     </Box>
   )
 }
