@@ -19,6 +19,7 @@ const linking: LinkingOptions<RootStackParamList> = {
             screens: {
               Podcasts: 'podcasts',
               Episodes: 'episodes',
+              Episode: 'episode',
             },
           },
           ProfileTab: {

@@ -9,7 +9,7 @@
 import React from 'react'
 import { Box, Heading } from 'native-base'
 
-import { PodcastStackScreenProps, RootTabScreenProps } from '../types'
+import { PodcastStackScreenProps } from '../types'
 
 export default function PLayer({
   navigation,

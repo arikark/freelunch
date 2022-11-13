@@ -10,6 +10,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useColorModeValue } from 'native-base'
 
+import Episode from '../screens/Episode'
 import Episodes from '../screens/Episodes'
 import NotFoundScreen from '../screens/NotFoundScreen'
 import Player from '../screens/Player'
@@ -36,6 +37,11 @@ function PodcastsStack() {
       <PodcastNavigator.Screen
         name="Episodes"
         component={Episodes}
+        options={{ headerShown: false }}
+      />
+      <PodcastNavigator.Screen
+        name="Episode"
+        component={Episode}
         options={{ headerShown: false }}
       />
     </PodcastNavigator.Navigator>

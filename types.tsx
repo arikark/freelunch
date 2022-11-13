@@ -14,6 +14,7 @@ export type PodcastStackParamList = {
   Podcasts: undefined
   Episodes: { title: string }
   Player: undefined
+  Episode: { title: string }
 }
 
 export type RootTabParamList = {

@@ -1,9 +1,11 @@
 /* eslint-disable no-nested-ternary */
-import React from 'react'
+import React, { useState } from 'react'
+import { AntDesign } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
 import {
   HStack,
+  IconButton,
   Image,
   IPressableProps,
   Pressable,
@@ -34,17 +36,15 @@ export function EpisodeMenuItem({
   // Get relative date
   const formattedDate = moment(dateCreated).fromNow()
   const { navigate } = useNavigation()
+  const [isPlaying, setIsPlaying] = useState(false)
 
   return (
-    <Pressable maxW="96" {...props}>
+    <Pressable {...props}>
       {({ isHovered, isFocused, isPressed }) => {
         return (
           <VStack
             mt={2}
-            borderBottomColor="gray.600"
-            pb="12px"
-            borderBottomWidth={1}
-            h="136px"
+            minH="136px"
             justifyContent="space-between"
             color="white"
             style={{
@@ -72,9 +72,24 @@ export function EpisodeMenuItem({
             <Text mt="2" fontSize="sm" numberOfLines={2} isTruncated>
               {description}
             </Text>
-            <Text fontSize={10}>
-              {`${formattedDate} • ${formattedDuration}`}
-            </Text>
+            <HStack justifyContent="space-between" alignItems="center">
+              <Text fontSize={10}>
+                {`${formattedDate} • ${formattedDuration}`}
+              </Text>
+              <IconButton
+                accessibilityLabel="Play"
+                icon={
+                  isPlaying ? (
+                    <AntDesign name="pausecircle" size={18} color="white" />
+                  ) : (
+                    <AntDesign name="play" size={18} color="white" />
+                  )
+                }
+                size="md"
+                _pressed={{ bg: 'coolGray.500' }}
+                onPress={() => setIsPlaying(!isPlaying)}
+              />
+            </HStack>
           </VStack>
         )
       }}

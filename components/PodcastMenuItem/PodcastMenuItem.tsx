@@ -4,10 +4,8 @@ import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
 import {
   Badge,
-  Box,
   Card,
   HStack,
-  IBoxProps,
   Image,
   IPressableProps,
   Pressable,

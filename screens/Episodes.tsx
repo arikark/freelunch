@@ -2,6 +2,7 @@ import React from 'react'
 import {
   ArrowBackIcon,
   Box,
+  Divider,
   FlatList,
   Heading,
   HStack,
@@ -64,8 +65,14 @@ export default function Episodes({
           <EpisodeMenuItem
             {...item}
             mb={index === episodes.length - 1 ? '30%' : 0}
+            onPress={() =>
+              navigation.navigate('Episode', {
+                title: item.title,
+              })
+            }
           />
         )}
+        ItemSeparatorComponent={() => <Divider />}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => item.title.toString()}
       />
