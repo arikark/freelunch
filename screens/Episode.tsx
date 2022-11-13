@@ -3,6 +3,7 @@ import moment from 'moment'
 import {
   ArrowBackIcon,
   Box,
+  Button,
   Heading,
   HStack,
   IconButton,
@@ -22,21 +23,22 @@ type EpisodeProps = {
   secondsPlayed: number
   image: string
 }
+const episode: EpisodeProps = {
+  podcastTitle: 'The Daily',
+  episodeTitle: 'How Democrats Can Win',
+  description: 'How the Democrats can win the 2020 election',
+  dateCreated: '2022-11-09 00:00:00',
+  durationInSeconds: 7200,
+  secondsPlayed: 6023,
+  image: 'https://wallpaperaccess.com/full/317501.jpg',
+}
 
 export default function Episode({
   navigation,
   route,
 }: PodcastStackScreenProps<'Episode'>) {
   const { title } = route.params
-  const episode: EpisodeProps = {
-    podcastTitle: 'The Daily',
-    episodeTitle: 'How Democrats Can Win',
-    description: 'How the Democrats can win the 2020 election',
-    dateCreated: '2022-11-09 00:00:00',
-    durationInSeconds: 7200,
-    secondsPlayed: 6023,
-    image: 'https://wallpaperaccess.com/full/317501.jpg',
-  }
+
   const formattedDate = moment(episode.durationInSeconds).fromNow()
   // Format time as 1 hour and 20 minutes left
   const timeRemaining = moment
@@ -52,8 +54,8 @@ export default function Episode({
           mr={4}
         />
       </HStack>
-      <VStack>
-        <Box>
+      <VStack minH="28%" justifyContent="space-between">
+        <Box minH="17%" justifyContent="space-between">
           <Image
             borderRadius={8}
             source={{
@@ -70,6 +72,11 @@ export default function Episode({
           <Text
             fontSize={10}
           >{`${formattedDate} • ${timeRemaining} left`}</Text>
+        </Box>
+        <Box>
+          <Button colorScheme="blue" rounded="2xl" width="88px">
+            Play
+          </Button>
         </Box>
       </VStack>
     </Box>
