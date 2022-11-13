@@ -83,7 +83,7 @@ export function PodcastMenuItem({
                 size="xl"
                 mr={3}
               />
-              <VStack maxW="60%" justifyContent="space-between">
+              <VStack justifyContent="space-between" flex={1}>
                 <Text color="coolGray.800" fontWeight="medium" fontSize="xl">
                   {title}
                 </Text>
