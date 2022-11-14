@@ -4,8 +4,10 @@ import {
   ArrowBackIcon,
   Box,
   Button,
+  ChevronRightIcon,
   Heading,
   HStack,
+  Icon,
   IconButton,
   Image,
   Pressable,
@@ -62,7 +64,7 @@ export default function Episode({
           mr={4}
         />
       </HStack>
-      <VStack minH="28%" justifyContent="space-between">
+      <VStack minH="50%" justifyContent="space-between">
         <Box minH="17%" justifyContent="space-between">
           <Image
             borderRadius={8}
@@ -82,7 +84,7 @@ export default function Episode({
           >{`${formattedDate} • ${timeRemaining} left`}</Text>
         </Box>
         <Box>
-          <Button colorScheme="blue" rounded="2xl" width="88px">
+          <Button colorScheme="blue" rounded="2xl" width="88px" marginTop={3}>
             Play
           </Button>
         </Box>
@@ -98,6 +100,19 @@ export default function Episode({
             )}
           </Text>
         </Box>
+
+        <Pressable
+          onPress={() => navigation.navigate('Episodes', { title })}
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="space-between"
+          marginTop={4}
+        >
+          <Text bold fontSize="lg">
+            See all episodes
+          </Text>
+          <ChevronRightIcon as="go to episodes" />
+        </Pressable>
       </VStack>
     </Box>
   )
