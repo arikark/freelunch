@@ -84,7 +84,13 @@ export default function Episode({
           >{`${formattedDate} • ${timeRemaining} left`}</Text>
         </Box>
         <Box>
-          <Button colorScheme="blue" rounded="2xl" width="88px" marginTop={3}>
+          <Button
+            colorScheme="blue"
+            rounded="2xl"
+            width="88px"
+            marginTop={3}
+            onPress={() => navigation.navigate('Player')}
+          >
             Play
           </Button>
         </Box>

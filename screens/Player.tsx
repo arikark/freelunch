@@ -6,17 +6,106 @@
 
 // const SpinnerView = SpinnerHOC(View)
 
-import React from 'react'
-import { Box, Heading } from 'native-base'
+import React, { useState } from 'react'
+import {
+  Box,
+  ChevronDownIcon,
+  Text,
+  Pressable,
+  Heading,
+  HStack,
+  VStack,
+  Image,
+  PlayIcon,
+  Button,
+  IconButton,
+  Icon,
+} from 'native-base'
 
 import { PodcastStackScreenProps } from '../types'
+import { AntDesign } from '@expo/vector-icons'
+
+type EpisodeProps = {
+  podcastTitle: string
+  episodeTitle: string
+  description: string
+  dateCreated: string
+  durationInSeconds: number
+  secondsPlayed: number
+  image: string
+}
+
+const episode: EpisodeProps = {
+  podcastTitle: 'The Daily',
+  episodeTitle: 'How Democrats Can Win',
+  description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. `,
+  dateCreated: '2022-11-09 00:00:00',
+  durationInSeconds: 7200,
+  secondsPlayed: 6023,
+  image: 'https://wallpaperaccess.com/full/317501.jpg',
+}
 
 export default function PLayer({
   navigation,
 }: PodcastStackScreenProps<'Player'>) {
+  const [isPlaying, setIsPlaying] = useState(false)
   return (
-    <Box h="100%" paddingX={4} safeArea>
-      <Heading>My Profile</Heading>
+    <Box h="100%" paddingX={3} safeAreaTop safeAreaX variant="layout">
+      <VStack minH="90%" alignItems="center">
+        <HStack bgColor="green.600" width="100%" alignItems="center">
+          <Pressable
+            onPress={() => navigation.goBack()}
+            bgColor="white"
+            alignContent="flex-start"
+          >
+            <ChevronDownIcon size="30" as="Hide player page" />
+          </Pressable>
+          <Box bgColor="amber.600" alignItems="center">
+            <Text>PLAYING FROM PODCAST</Text>
+            <Heading>{episode.podcastTitle}</Heading>
+          </Box>
+        </HStack>
+        <Image
+          borderRadius={2}
+          source={{
+            uri: episode.image,
+          }}
+          alt="Alternate Text"
+          size="2xl"
+          alignSelf="center"
+          marginTop={15}
+        />
+        <Box marginTop={6}>
+          <Heading>{episode.episodeTitle}</Heading>
+          <Text>{episode.podcastTitle}</Text>
+        </Box>
+        <Box
+          flexDirection="row"
+          width="100%"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <IconButton>
+            <AntDesign name="stepbackward" size={20} color="white" />
+          </IconButton>
+          <IconButton
+            accessibilityLabel="Play"
+            icon={
+              isPlaying ? (
+                <AntDesign name="pausecircle" size={60} color="white" />
+              ) : (
+                <AntDesign name="play" size={60} color="white" />
+              )
+            }
+            size="md"
+            _pressed={{ bg: 'coolGray.500' }}
+            onPress={() => setIsPlaying(!isPlaying)}
+          />
+          <IconButton>
+            <AntDesign name="stepforward" size={20} color="white" />
+          </IconButton>
+        </Box>
+      </VStack>
     </Box>
   )
 }
