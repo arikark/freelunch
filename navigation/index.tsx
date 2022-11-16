@@ -126,7 +126,11 @@ function RootNavigator() {
         options={{ title: 'Oops!' }}
       />
       <PodcastNavigator.Group screenOptions={{ presentation: 'modal' }}>
-        <PodcastNavigator.Screen name="Player" component={Player} />
+        <PodcastNavigator.Screen
+          name="Player"
+          component={Player}
+          options={{ headerShown: false }}
+        />
       </PodcastNavigator.Group>
     </Stack.Navigator>
   )
