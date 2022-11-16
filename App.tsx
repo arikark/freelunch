@@ -1,5 +1,4 @@
 import React from 'react'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import { extendTheme, NativeBaseProvider } from 'native-base'
 
@@ -49,10 +48,8 @@ export default function App() {
   } else {
     return (
       <NativeBaseProvider theme={theme}>
-        <SafeAreaProvider>
-          <Navigation />
-          <StatusBar />
-        </SafeAreaProvider>
+        <Navigation />
+        <StatusBar />
       </NativeBaseProvider>
     )
   }
