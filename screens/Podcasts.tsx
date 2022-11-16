@@ -1,5 +1,6 @@
 import React from 'react'
 import { SectionListProps } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import {
   Box,
   Heading,
@@ -14,7 +15,6 @@ import {
   PodcastMenuItemProps,
 } from '../components/PodcastMenuItem'
 import { PodcastStackScreenProps } from '../types'
-import { useNavigation } from '@react-navigation/native'
 
 const podcasts: SectionListProps<PodcastMenuItemProps> = {
   sections: [

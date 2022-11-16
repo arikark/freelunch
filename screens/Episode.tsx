@@ -7,11 +7,9 @@ import {
   ChevronRightIcon,
   Heading,
   HStack,
-  Icon,
   IconButton,
   Image,
   Pressable,
-  Spacer,
   Text,
   VStack,
 } from 'native-base'

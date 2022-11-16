@@ -7,23 +7,19 @@
 // const SpinnerView = SpinnerHOC(View)
 
 import React, { useState } from 'react'
+import { AntDesign } from '@expo/vector-icons'
 import {
   Box,
   ChevronDownIcon,
-  Text,
-  Pressable,
   Heading,
   HStack,
-  VStack,
-  Image,
-  PlayIcon,
-  Button,
   IconButton,
-  Icon,
+  Image,
+  Text,
+  VStack,
 } from 'native-base'
 
 import { PodcastStackScreenProps } from '../types'
-import { AntDesign } from '@expo/vector-icons'
 
 type EpisodeProps = {
   podcastTitle: string
@@ -52,15 +48,16 @@ export default function PLayer({
   return (
     <Box h="100%" paddingX={3} safeAreaTop safeAreaX variant="layout">
       <VStack minH="90%" alignItems="center">
-        <HStack bgColor="green.600" width="100%" alignItems="center">
-          <Pressable
+        <HStack width="100%" alignItems="center" justifyContent="start">
+          <IconButton
+            icon={<ChevronDownIcon as="Hide player page" />}
             onPress={() => navigation.goBack()}
-            bgColor="white"
-            alignContent="flex-start"
-          >
-            <ChevronDownIcon size="30" as="Hide player page" />
-          </Pressable>
-          <Box bgColor="amber.600" alignItems="center">
+            variant="ghost"
+            colorScheme="white"
+            mr="15%"
+          />
+
+          <Box alignItems="center">
             <Text>PLAYING FROM PODCAST</Text>
             <Heading>{episode.podcastTitle}</Heading>
           </Box>
