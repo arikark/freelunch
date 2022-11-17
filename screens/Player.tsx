@@ -15,7 +15,6 @@ import {
   HStack,
   IconButton,
   Image,
-  Pressable,
   Text,
   VStack,
 } from 'native-base'
@@ -42,22 +41,23 @@ const episode: EpisodeProps = {
   image: 'https://wallpaperaccess.com/full/317501.jpg',
 }
 
-export default function PLayer({
+export default function Player({
   navigation,
 }: PodcastStackScreenProps<'Player'>) {
   const [isPlaying, setIsPlaying] = useState(false)
   return (
     <Box h="100%" paddingX={3} safeAreaTop safeAreaX variant="layout">
       <VStack minH="90%" alignItems="center">
-        <HStack bgColor="green.600" width="100%" alignItems="center">
-          <Pressable
+        <HStack width="100%" alignItems="center" justifyContent="start">
+          <IconButton
+            icon={<ChevronDownIcon as="Hide player page" />}
             onPress={() => navigation.goBack()}
-            bgColor="white"
-            alignContent="flex-start"
-          >
-            <ChevronDownIcon size="30" as="Hide player page" />
-          </Pressable>
-          <Box bgColor="amber.600" alignItems="center">
+            variant="ghost"
+            colorScheme="white"
+            mr="15%"
+          />
+
+          <Box alignItems="center">
             <Text>PLAYING FROM PODCAST</Text>
             <Heading>{episode.podcastTitle}</Heading>
           </Box>
