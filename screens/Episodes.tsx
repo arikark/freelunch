@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   ArrowBackIcon,
-  Box,
   Divider,
   FlatList,
   Heading,
@@ -13,6 +12,7 @@ import {
   EpisodeMenuItem,
   EpisodeMenuItemProps,
 } from '../components/EpisodeMenuItem'
+import { Layout } from '../components/Layout'
 import { PodcastStackScreenProps } from '../types'
 
 const episodes: EpisodeMenuItemProps[] = [
@@ -49,7 +49,7 @@ export default function Episodes({
   const { title } = route.params
 
   return (
-    <Box h="100%" paddingX={4} safeAreaTop safeAreaX variant="layout">
+    <Layout>
       <HStack alignItems="center">
         <IconButton
           icon={<ArrowBackIcon />}
@@ -58,7 +58,6 @@ export default function Episodes({
         />
         <Heading>{title}</Heading>
       </HStack>
-
       <FlatList
         data={episodes}
         renderItem={({ item, index }) => (
@@ -76,6 +75,6 @@ export default function Episodes({
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => item.title.toString()}
       />
-    </Box>
+    </Layout>
   )
 }

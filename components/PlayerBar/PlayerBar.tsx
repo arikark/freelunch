@@ -14,10 +14,13 @@ export function PlayerBar({
       width="100%"
       flexDir="row"
       position="absolute"
-      bottom={100}
+      bottom={81}
       left={0}
       right={0}
       zIndex={1000}
+      bgColor="red.100"
+      h="40px"
+      w="900px"
     >
       <Image source={{ uri: image }} />
       <Heading size="xs">{series}</Heading>

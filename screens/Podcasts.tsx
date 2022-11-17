@@ -1,5 +1,6 @@
 import React from 'react'
 import { SectionListProps } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import {
   Box,
   Heading,
@@ -14,7 +15,7 @@ import {
   PodcastMenuItemProps,
 } from '../components/PodcastMenuItem'
 import { PodcastStackScreenProps } from '../types'
-import { useNavigation } from '@react-navigation/native'
+import { Layout } from '../components/Layout'
 
 const podcasts: SectionListProps<PodcastMenuItemProps> = {
   sections: [
@@ -134,7 +135,7 @@ export default function Podcasts({
 }: PodcastStackScreenProps<'Podcasts'>) {
   const { toggleColorMode } = useColorMode()
   return (
-    <Box h="100%" paddingX={4} safeAreaTop safeAreaX variant="layout">
+    <Layout>
       <Heading>Podcasts</Heading>
 
       <SectionList
@@ -150,6 +151,6 @@ export default function Podcasts({
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => item.title.toString()}
       />
-    </Box>
+    </Layout>
   )
 }

@@ -17,6 +17,7 @@ import {
 } from 'native-base'
 
 import { PodcastStackScreenProps } from '../types'
+import { Layout } from '../components/Layout'
 
 type EpisodeProps = {
   podcastTitle: string
@@ -56,7 +57,7 @@ export default function Episode({
       : episode.description
 
   return (
-    <Box h="100%" paddingX={4} safeAreaTop safeAreaX variant="layout">
+    <Layout>
       <HStack alignItems="center">
         <IconButton
           icon={<ArrowBackIcon />}
@@ -120,6 +121,6 @@ export default function Episode({
           <ChevronRightIcon as="go to episodes" />
         </Pressable>
       </VStack>
-    </Box>
+    </Layout>
   )
 }

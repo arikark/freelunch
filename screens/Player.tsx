@@ -7,23 +7,20 @@
 // const SpinnerView = SpinnerHOC(View)
 
 import React, { useState } from 'react'
+import { AntDesign } from '@expo/vector-icons'
 import {
   Box,
   ChevronDownIcon,
-  Text,
-  Pressable,
   Heading,
   HStack,
-  VStack,
-  Image,
-  PlayIcon,
-  Button,
   IconButton,
-  Icon,
+  Image,
+  Pressable,
+  Text,
+  VStack,
 } from 'native-base'
 
 import { PodcastStackScreenProps } from '../types'
-import { AntDesign } from '@expo/vector-icons'
 
 type EpisodeProps = {
   podcastTitle: string

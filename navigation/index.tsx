@@ -4,11 +4,23 @@
  *
  */
 import * as React from 'react'
-import { FontAwesome } from '@expo/vector-icons'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { AntDesign, FontAwesome } from '@expo/vector-icons'
+import {
+  BottomTabBarProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { useColorModeValue } from 'native-base'
+import {
+  Box,
+  HStack,
+  IconButton,
+  Pressable,
+  Text,
+  Image,
+  useColorModeValue,
+  VStack,
+} from 'native-base'
 
 import Episode from '../screens/Episode'
 import Episodes from '../screens/Episodes'
@@ -20,7 +32,6 @@ import {
   PodcastStackParamList,
   RootStackParamList,
   RootTabParamList,
-  RootTabScreenProps,
 } from '../types'
 import LinkingConfiguration from './LinkingConfiguration'
 
@@ -54,8 +65,20 @@ function PodcastsStack() {
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name']
   color: string
+  opacity?: number
 }) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />
+  const { color, opacity } = props
+  return (
+    <FontAwesome
+      size={30}
+      style={{
+        marginBottom: 3,
+        opacity,
+        color,
+      }}
+      {...props}
+    />
+  )
 }
 
 /**
@@ -65,42 +88,139 @@ function TabBarIcon(props: {
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
+function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+  return (
+    <>
+      <Pressable
+        w="100%"
+        bgColor="gray.800"
+        onPress={() => navigation.navigate('Player')}
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+        py={1}
+        px={4}
+        position="absolute"
+        bottom={70}
+      >
+        <HStack justifyContent="space-between">
+          <Image
+            source={{ uri: 'https://wallpaperaccess.com/full/317501.jpg' }}
+            alt="image base"
+            borderRadius={8}
+            size="xs"
+            mr={4}
+          />
+          <VStack>
+            <Text bold>How Democrats Can Win</Text>
+            <Text color="gray.300">The Daily</Text>
+          </VStack>
+        </HStack>
+        <IconButton
+          p="0"
+          accessibilityLabel="Play"
+          icon={
+            true ? (
+              <AntDesign name="play" size={24} color="white" />
+            ) : (
+              <AntDesign name="pause" size={24} color="white" />
+            )
+          }
+          size="md"
+          _pressed={{ bg: 'coolGray.500' }}
+        />
+      </Pressable>
+
+      <HStack
+        w="100%"
+        bgColor="purple.900"
+        position="absolute"
+        bottom={0}
+        py={2}
+        opacity="0.9"
+        justifyContent="space-evenly"
+      >
+        {state.routes.map((route, index) => {
+          const { options } = descriptors[route.key]
+
+          const isFocused = state.index === index
+
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            })
+
+            if (!isFocused && !event.defaultPrevented) {
+              navigation.navigate(route.name)
+            }
+          }
+
+          return (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={isFocused ? { selected: true } : {}}
+              accessibilityLabel={options.tabBarAccessibilityLabel}
+              testID={options.tabBarTestID}
+              onPress={onPress}
+              style={{ flex: 1 }}
+            >
+              <Box
+                alignItems="center"
+                justifyContent="center"
+                h="100%"
+                w="100%"
+              >
+                {options.tabBarIcon &&
+                  options.tabBarIcon({
+                    color: 'white',
+                    focused: isFocused,
+                    size: 30,
+                  })}
+
+                <Text opacity={isFocused ? 1 : 0.5}>{options.title}</Text>
+              </Box>
+            </Pressable>
+          )
+        })}
+      </HStack>
+    </>
+  )
+}
+
 function BottomTabNavigator() {
-  const backgroundColor = useColorModeValue('#312e81', '#312e81')
   return (
     <BottomTab.Navigator
       initialRouteName="PodcastStack"
+      tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
-        tabBarStyle: {
-          backgroundColor,
-          opacity: 0.9,
-          borderTopWidth: 0,
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-        },
-        tabBarActiveTintColor: 'white',
         headerShown: false,
       }}
     >
       <BottomTab.Screen
         name="PodcastStack"
-        component={PodcastsStack}
-        options={({ navigation }: RootTabScreenProps<'PodcastStack'>) => ({
+        options={{
           title: 'Podcasts',
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="podcast" color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name="podcast"
+              color={color}
+              opacity={focused ? 1 : 0.5}
+            />
           ),
-        })}
+        }}
+        component={PodcastsStack}
       />
       <BottomTab.Screen
         name="ProfileTab"
-        component={ProfileTab}
         options={{
-          title: 'My Profile',
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          title: 'Profile',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name="user" color={color} opacity={focused ? 1 : 0.5} />
+          ),
         }}
+        component={ProfileTab}
       />
     </BottomTab.Navigator>
   )
@@ -126,7 +246,11 @@ function RootNavigator() {
         options={{ title: 'Oops!' }}
       />
       <PodcastNavigator.Group screenOptions={{ presentation: 'modal' }}>
-        <PodcastNavigator.Screen name="Player" component={Player} />
+        <PodcastNavigator.Screen
+          name="Player"
+          component={Player}
+          options={{ headerShown: false }}
+        />
       </PodcastNavigator.Group>
     </Stack.Navigator>
   )
