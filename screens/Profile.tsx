@@ -6,6 +6,7 @@ import {
   FormControl,
   Heading,
   HStack,
+  Icon,
   IconButton,
   Image,
   Input,
@@ -14,6 +15,7 @@ import {
   VStack,
 } from 'native-base'
 
+import { ProfileMenuItem } from '../components/ProfileMenuItem'
 import { RootTabScreenProps } from '../types'
 
 function EditModal({
@@ -86,12 +88,12 @@ export default function Profile({
         alignItems="center"
         justifyContent="start"
       >
-        <HStack>
-          <Box flex={1} />
-          <Box flex={1} alignItems="center" justifyContent="center">
+        <HStack mb={5}>
+          <Box flex={0.3} />
+          <Box flex={1.6} alignItems="center" justifyContent="center">
             <Heading>My Profile</Heading>
           </Box>
-          <Box flex={1} alignItems="flex-end">
+          <Box flex={0.3} alignItems="flex-end">
             <IconButton
               icon={<AntDesign name="edit" size={24} color="white" />}
               onPress={() => setShowModal(true)}
@@ -100,12 +102,11 @@ export default function Profile({
         </HStack>
         <VStack
           alignItems="center"
-          bgColor="amber.500"
           minH="60%"
           justifyContent="space-around"
           w="100%"
         >
-          <Box bgColor="green.100" alignItems="center">
+          <Box alignItems="center">
             <Image
               borderRadius={400}
               source={{
@@ -120,7 +121,6 @@ export default function Profile({
             </Box>
           </Box>
           <HStack
-            bgColor="blue.400"
             justifyContent="space-evenly"
             alignItems="center"
             width="100%"
@@ -164,8 +164,13 @@ export default function Profile({
               </Text>
             </Box>
           </HStack>
-          <Box backgroundColor="pink.200" h="180px" w="100%">
-            hello
+          <Box h="180px" w="100%">
+            <VStack justifyContent="space-evenly">
+              <ProfileMenuItem label="Your Favourites" iconName="hearto" />
+              <ProfileMenuItem label="Payment" iconName="creditcard" />
+              <ProfileMenuItem label="Tell a Friend" iconName="team" />
+              <ProfileMenuItem label="Settings" iconName="setting" />
+            </VStack>
           </Box>
         </VStack>
       </Box>
