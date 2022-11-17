@@ -10,12 +10,12 @@ import {
   useColorMode,
 } from 'native-base'
 
+import { Layout } from '../components/Layout'
 import {
   PodcastMenuItem,
   PodcastMenuItemProps,
 } from '../components/PodcastMenuItem'
 import { PodcastStackScreenProps } from '../types'
-import { Layout } from '../components/Layout'
 
 const podcasts: SectionListProps<PodcastMenuItemProps> = {
   sections: [
