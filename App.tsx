@@ -11,6 +11,11 @@ export default function App() {
       // Changing initialColorMode to 'dark'
       initialColorMode: 'dark',
     },
+    fonts: {
+      heading: 'roboto-mono',
+      body: 'roboto-mono',
+      mono: 'roboto-mono',
+    },
     components: {
       Box: {
         variants: {
