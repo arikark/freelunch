@@ -1,0 +1,19 @@
+SERIES
+	name
+	image
+	description
+	r Episode []
+
+EPISODE
+	name
+	description
+	audioSnippet
+	host
+	audio
+	duration
+	CPD_CATEGORY (Ethics, Prof Skills, Substantive Law, Practice Mngmnt & Bus Skills)
+	CPD_POINT ()
+
+
+
+
