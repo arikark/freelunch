@@ -16,10 +16,14 @@ export type PodcastStackParamList = {
   Player: undefined
   Episode: { title: string }
 }
+export type ProfileStackParamList = {
+  Profile: undefined
+  Favourites: undefined
+}
 
 export type RootTabParamList = {
   PodcastStack: NavigatorScreenParams<PodcastStackParamList> | undefined
-  ProfileTab: undefined
+  ProfileStack: NavigatorScreenParams<ProfileStackParamList> | undefined
 }
 
 export type RootStackParamList = {
@@ -43,6 +47,15 @@ export type PodcastStackScreenProps<
   NativeStackScreenProps<PodcastStackParamList, Screen>,
   CompositeScreenProps<
     BottomTabScreenProps<RootTabParamList, 'PodcastStack'>,
+    NativeStackScreenProps<RootStackParamList>
+  >
+>
+export type ProfileStackScreenProps<
+  Screen extends keyof ProfileStackParamList
+> = CompositeScreenProps<
+  NativeStackScreenProps<ProfileStackParamList, Screen>,
+  CompositeScreenProps<
+    BottomTabScreenProps<RootTabParamList, 'ProfileStack'>,
     NativeStackScreenProps<RootStackParamList>
   >
 >

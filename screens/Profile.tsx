@@ -16,7 +16,7 @@ import {
 } from 'native-base'
 
 import { ProfileMenuItem } from '../components/ProfileMenuItem'
-import { RootTabScreenProps } from '../types'
+import { ProfileStackScreenProps, RootTabScreenProps } from '../types'
 
 function EditModal({
   showModal,
@@ -75,7 +75,7 @@ const episode: EpisodeProps = {
 
 export default function Profile({
   navigation,
-}: RootTabScreenProps<'ProfileTab'>) {
+}: ProfileStackScreenProps<'Profile'>) {
   const [showModal, setShowModal] = useState(false)
   return (
     <>
@@ -166,7 +166,11 @@ export default function Profile({
           </HStack>
           <Box h="180px" w="100%">
             <VStack justifyContent="space-evenly">
-              <ProfileMenuItem label="Your Favourites" iconName="hearto" />
+              <ProfileMenuItem
+                label="Your Favourites"
+                iconName="hearto"
+                onPress={() => navigation.navigate('Favourites')}
+              />
               <ProfileMenuItem label="Payment" iconName="creditcard" />
               <ProfileMenuItem label="Tell a Friend" iconName="team" />
               <ProfileMenuItem label="Settings" iconName="setting" />
