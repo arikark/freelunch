@@ -5,15 +5,21 @@ import { Box, HStack, Icon, Pressable } from 'native-base'
 type ProfileMenuItemProps = {
   label: string
   iconName: typeof AntDesign['name']
+  onPress: () => void
 }
 
-export function ProfileMenuItem({ label, iconName }: ProfileMenuItemProps) {
+export function ProfileMenuItem({
+  label,
+  iconName,
+  onPress,
+}: ProfileMenuItemProps) {
   return (
     <Pressable
       h="25%"
       borderColor="white"
       borderBottomWidth={1}
       justifyContent="center"
+      onPress={onPress}
     >
       {({ isHovered, isFocused, isPressed }) => {
         return (
