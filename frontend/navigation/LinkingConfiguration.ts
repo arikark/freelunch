@@ -24,7 +24,8 @@ const linking: LinkingOptions<RootStackParamList> = {
           },
           ProfileTab: {
             screens: {
-              Profile: 'profile',
+              ProfileStack: 'profile',
+              Favourites: 'favourites',
             },
           },
         },

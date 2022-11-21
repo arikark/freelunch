@@ -171,9 +171,21 @@ export default function Profile({
                 iconName="hearto"
                 onPress={() => navigation.navigate('Favourites')}
               />
-              <ProfileMenuItem label="Payment" iconName="creditcard" />
-              <ProfileMenuItem label="Tell a Friend" iconName="team" />
-              <ProfileMenuItem label="Settings" iconName="setting" />
+              <ProfileMenuItem
+                label="Payment"
+                iconName="creditcard"
+                onPress={() => navigation.navigate('Favourites')}
+              />
+              <ProfileMenuItem
+                label="Tell a Friend"
+                iconName="team"
+                onPress={() => navigation.navigate('Favourites')}
+              />
+              <ProfileMenuItem
+                label="Settings"
+                iconName="setting"
+                onPress={() => navigation.navigate('Favourites')}
+              />
             </VStack>
           </Box>
         </VStack>
