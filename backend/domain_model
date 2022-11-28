@@ -2,17 +2,41 @@ SERIES
 	name
 	image
 	description
+	tags
 	r Episode []
+	Reviews []
+	Hosts []
 
 EPISODE
 	name
 	description
 	audioSnippet
-	host
 	audio
 	duration
-	CPD_CATEGORY (Ethics, Prof Skills, Substantive Law, Practice Mngmnt & Bus Skills)
-	CPD_POINT ()
+	tags (Politics, Business, News, True Crime, Pop Culture) --> use to drive recommendations
+	CPD_CATEGORY (Ethics, Prof Skills, Substantive Law, Practice Mngmnt & Bus Skills) --> This is the primary way to categorise our content (initially episodes only)
+	CPD_POINT (0.25, 0.5, 0.75, 1)
+	episodeNumber
+	Series
+	Reviews []
+	Hosts []
+
+REVIEW
+	Episode
+	Series
+	rating
+	review
+	date
+
+HOST
+	name
+	image
+	bio
+	linkedin
+	Episodes []
+	Series
+
+
 
 
 

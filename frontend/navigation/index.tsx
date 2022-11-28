@@ -3,6 +3,7 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
+
 import * as React from 'react'
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import {
@@ -20,7 +21,6 @@ import {
   Text,
   VStack,
 } from 'native-base'
-import * as Sentry from 'sentry-expo'
 
 import Episode from '../screens/Episode'
 import Episodes from '../screens/Episodes'
@@ -146,8 +146,6 @@ function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
           const isFocused = state.index === index
 
           const onPress = () => {
-            Sentry.Native.captureException('big error')
-
             const event = navigation.emit({
               type: 'tabPress',
               target: route.key,
