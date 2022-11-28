@@ -27,13 +27,16 @@ import Episodes from '../screens/Episodes'
 import NotFoundScreen from '../screens/NotFoundScreen'
 import Player from '../screens/Player'
 import Podcasts from '../screens/Podcasts'
-import ProfileTab from '../screens/Profile'
+
 import {
   PodcastStackParamList,
+  ProfileStackParamList,
   RootStackParamList,
   RootTabParamList,
 } from '../types'
 import LinkingConfiguration from './LinkingConfiguration'
+import Profile from '../screens/Profile'
+import Favourites from '../screens/Favourites'
 
 const PodcastNavigator = createNativeStackNavigator<PodcastStackParamList>()
 
@@ -56,6 +59,26 @@ function PodcastsStack() {
         options={{ headerShown: false }}
       />
     </PodcastNavigator.Navigator>
+  )
+}
+const ProfileNavigator = createNativeStackNavigator<ProfileStackParamList>()
+
+function ProfileStack() {
+  return (
+    <ProfileNavigator.Navigator initialRouteName="Profile">
+      <ProfileNavigator.Screen
+        name="Profile"
+        component={Profile}
+        options={{ headerShown: false }}
+      />
+      <ProfileNavigator.Screen
+        name="Favourites"
+        component={Favourites}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </ProfileNavigator.Navigator>
   )
 }
 
@@ -215,14 +238,14 @@ function BottomTabNavigator() {
         component={PodcastsStack}
       />
       <BottomTab.Screen
-        name="ProfileTab"
+        name="ProfileStack"
         options={{
           title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name="user" color={color} opacity={focused ? 1 : 0.5} />
           ),
         }}
-        component={ProfileTab}
+        component={ProfileStack}
       />
     </BottomTab.Navigator>
   )

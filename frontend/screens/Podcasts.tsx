@@ -4,10 +4,12 @@ import { useNavigation } from '@react-navigation/native'
 import {
   Box,
   Heading,
+  HStack,
   Image,
   Pressable,
   SectionList,
   useColorMode,
+  VStack,
 } from 'native-base'
 
 import { Layout } from '../components/Layout'
@@ -101,32 +103,64 @@ const podcasts: SectionListProps<PodcastMenuItemProps> = {
 function PodcastGallery() {
   const { navigate } = useNavigation()
   return (
-    <Box flexDirection="row" flexWrap="wrap" justifyContent="space-evenly">
-      {podcasts.sections[0].data.map((value) => (
-        <Pressable onPress={() => navigate('Episodes', { title: value.title })}>
-          {({ isHovered, isFocused, isPressed }) => (
-            <Image
-              accessibilityLabel={`Go to ${value.title}`}
-              marginTop={2}
-              borderRadius={8}
-              source={{
-                uri: value.image,
-              }}
-              alt="Alternate Text"
-              size="sm"
-              mr={3}
-              style={{
-                transform: [
-                  {
-                    scale: isPressed ? 0.86 : 1,
-                  },
-                ],
-              }}
-            />
-          )}
-        </Pressable>
-      ))}
-    </Box>
+    <VStack alignItems="center">
+      <HStack justifyContent="space-between">
+        {podcasts.sections[0].data.map((value) => (
+          <Pressable
+            onPress={() => navigate('Episodes', { title: value.title })}
+          >
+            {({ isHovered, isFocused, isPressed }) => (
+              <Image
+                accessibilityLabel={`Go to ${value.title}`}
+                marginTop={2}
+                borderRadius={8}
+                source={{
+                  uri: value.image,
+                }}
+                alt="Alternate Text"
+                size="md"
+                margin={1}
+                style={{
+                  transform: [
+                    {
+                      scale: isPressed ? 0.86 : 1,
+                    },
+                  ],
+                }}
+              />
+            )}
+          </Pressable>
+        ))}
+      </HStack>
+      <HStack justifyContent="space-between">
+        {podcasts.sections[0].data.map((value) => (
+          <Pressable
+            onPress={() => navigate('Episodes', { title: value.title })}
+          >
+            {({ isHovered, isFocused, isPressed }) => (
+              <Image
+                accessibilityLabel={`Go to ${value.title}`}
+                marginTop={2}
+                borderRadius={8}
+                source={{
+                  uri: value.image,
+                }}
+                alt="Alternate Text"
+                size="md"
+                margin={1}
+                style={{
+                  transform: [
+                    {
+                      scale: isPressed ? 0.86 : 1,
+                    },
+                  ],
+                }}
+              />
+            )}
+          </Pressable>
+        ))}
+      </HStack>
+    </VStack>
   )
 }
 
