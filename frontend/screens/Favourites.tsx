@@ -1,4 +1,5 @@
 import { Heading } from 'native-base'
+
 import { Layout } from '../components/Layout'
 import { ProfileStackScreenProps } from '../types'
 

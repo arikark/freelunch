@@ -6,7 +6,6 @@ import {
   FormControl,
   Heading,
   HStack,
-  Icon,
   IconButton,
   Image,
   Input,
@@ -16,7 +15,7 @@ import {
 } from 'native-base'
 
 import { ProfileMenuItem } from '../components/ProfileMenuItem'
-import { ProfileStackScreenProps, RootTabScreenProps } from '../types'
+import { ProfileStackScreenProps } from '../types'
 
 function EditModal({
   showModal,

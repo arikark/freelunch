@@ -1,5 +1,4 @@
 import { Box, IBoxProps } from 'native-base'
-import { PlayerBar } from '../PlayerBar'
 
 export function Layout({ children }: IBoxProps) {
   return (

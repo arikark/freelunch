@@ -2,7 +2,6 @@ import React from 'react'
 import { SectionListProps } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import {
-  Box,
   Heading,
   HStack,
   Image,

@@ -24,10 +24,11 @@ import {
 
 import Episode from '../screens/Episode'
 import Episodes from '../screens/Episodes'
+import Favourites from '../screens/Favourites'
 import NotFoundScreen from '../screens/NotFoundScreen'
 import Player from '../screens/Player'
 import Podcasts from '../screens/Podcasts'
-
+import Profile from '../screens/Profile'
 import {
   PodcastStackParamList,
   ProfileStackParamList,
@@ -35,8 +36,6 @@ import {
   RootTabParamList,
 } from '../types'
 import LinkingConfiguration from './LinkingConfiguration'
-import Profile from '../screens/Profile'
-import Favourites from '../screens/Favourites'
 
 const PodcastNavigator = createNativeStackNavigator<PodcastStackParamList>()
 

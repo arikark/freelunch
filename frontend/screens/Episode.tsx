@@ -14,8 +14,8 @@ import {
   VStack,
 } from 'native-base'
 
-import { PodcastStackScreenProps } from '../types'
 import { Layout } from '../components/Layout'
+import { PodcastStackScreenProps } from '../types'
 
 type EpisodeProps = {
   podcastTitle: string
