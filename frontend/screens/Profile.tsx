@@ -85,7 +85,7 @@ export default function Profile({
         safeAreaX
         variant="layout"
         alignItems="center"
-        justifyContent="start"
+        justifyContent="flex-start"
       >
         <HStack mb={5}>
           <Box flex={0.3} />

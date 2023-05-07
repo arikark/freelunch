@@ -48,7 +48,7 @@ export default function Player({
   return (
     <Box h="100%" paddingX={3} safeAreaTop safeAreaX variant="layout">
       <VStack minH="90%" alignItems="center">
-        <HStack width="100%" alignItems="center" justifyContent="start">
+        <HStack width="100%" alignItems="center" justifyContent="flex-start">
           <IconButton
             icon={<ChevronDownIcon as="Hide player page" />}
             onPress={() => navigation.goBack()}

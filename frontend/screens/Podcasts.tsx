@@ -23,7 +23,7 @@ const podcasts: SectionListProps<PodcastMenuItemProps> = {
     {
       data: [
         {
-          title: 'The Daily',
+          title: 'The Daily1',
           category: 'News',
           description:
             'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
@@ -32,7 +32,7 @@ const podcasts: SectionListProps<PodcastMenuItemProps> = {
           latestEpisodeDurationInSeconds: 7200,
         },
         {
-          title: 'The Daily',
+          title: 'The Daily2',
           category: 'News',
           description:
             'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
@@ -41,7 +41,7 @@ const podcasts: SectionListProps<PodcastMenuItemProps> = {
           latestEpisodeDurationInSeconds: 300,
         },
         {
-          title: 'The Daily',
+          title: 'The Daily3',
           category: 'News',
           description:
             'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
@@ -50,7 +50,7 @@ const podcasts: SectionListProps<PodcastMenuItemProps> = {
           latestEpisodeDurationInSeconds: 120,
         },
         {
-          title: 'The Daily',
+          title: 'The Daily4',
           category: 'News',
           description:
             'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
@@ -59,7 +59,7 @@ const podcasts: SectionListProps<PodcastMenuItemProps> = {
           latestEpisodeDurationInSeconds: 120,
         },
         {
-          title: 'The Daily',
+          title: 'The Daily5',
           category: 'News',
           description:
             'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
@@ -68,7 +68,7 @@ const podcasts: SectionListProps<PodcastMenuItemProps> = {
           latestEpisodeDurationInSeconds: 120,
         },
         {
-          title: 'The Daily',
+          title: 'The Daily6',
           category: 'News',
           description:
             'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
@@ -77,7 +77,7 @@ const podcasts: SectionListProps<PodcastMenuItemProps> = {
           latestEpisodeDurationInSeconds: 120,
         },
         {
-          title: 'The Daily',
+          title: 'The Daily7',
           category: 'News',
           description:
             'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
@@ -86,7 +86,7 @@ const podcasts: SectionListProps<PodcastMenuItemProps> = {
           latestEpisodeDurationInSeconds: 120,
         },
         {
-          title: 'The Daily',
+          title: 'The Daily8',
           category: 'News',
           description:
             'The Daily is produced by The New York Times and hosted by Michael Barbaro. Each weekday, we choose one big story and one other story we think you’ll want to hear, and put them together in a single daily podcast. The Daily is an independent production, working closely with Times journalists.',
@@ -106,6 +106,7 @@ function PodcastGallery() {
       <HStack justifyContent="space-between">
         {podcasts.sections[0].data.map((value) => (
           <Pressable
+            key={value.title}
             onPress={() => navigate('Episodes', { title: value.title })}
           >
             {({ isHovered, isFocused, isPressed }) => (
@@ -134,6 +135,7 @@ function PodcastGallery() {
       <HStack justifyContent="space-between">
         {podcasts.sections[0].data.map((value) => (
           <Pressable
+            key={value.title}
             onPress={() => navigate('Episodes', { title: value.title })}
           >
             {({ isHovered, isFocused, isPressed }) => (
