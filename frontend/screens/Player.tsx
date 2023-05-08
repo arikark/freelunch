@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons'
+import Slider from '@react-native-community/slider'
 import { Audio, AVPlaybackStatus } from 'expo-av'
 import {
   Box,
@@ -8,36 +9,12 @@ import {
   HStack,
   IconButton,
   Image,
-  Slider,
   Text,
   VStack,
 } from 'native-base'
 
 import { usePlaybackStore } from '../hooks/store'
 import { PodcastStackScreenProps } from '../types'
-
-const PlaybackSlider = ({
-  setOnChangeValue,
-}: {
-  setOnChangeValue: (v: number) => void
-}) => {
-  return (
-    <Box alignItems="center" w="100%">
-      <Slider
-        defaultValue={70}
-        colorScheme="cyan"
-        onChange={(v) => {
-          setOnChangeValue(Math.floor(v))
-        }}
-      >
-        <Slider.Track>
-          <Slider.FilledTrack />
-        </Slider.Track>
-        <Slider.Thumb />
-      </Slider>
-    </Box>
-  )
-}
 
 type EpisodeProps = {
   podcastTitle: string
@@ -64,8 +41,10 @@ export default function Player({
 }: PodcastStackScreenProps<'Player'>) {
   const title = 'How Democrats Can Win'
   const author = 'The Daily'
+  // sound of conversation
   const audioUrl =
     'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+
   const description = `Lorem ipsum do`
 
   const [shouldPlayAtEndOfSeek, setShouldPlayAtEndOfSeek] =
@@ -87,30 +66,30 @@ export default function Player({
     }
   }
 
-  const loadNewPlaybackInstance = async (playing: boolean) => {
-    // check if the song that is being played is the same as the one that is being requested
-    // if (playback.playbackObject?.sound !== null) {
-    //   await playback.playbackObject?.sound.unloadAsync()
-    //   playback.setPlaybackObject(null)
-    // }
-
-    if (!playback.playbackObject?.sound) {
-      const source = { uri: audioUrl }
-      const initialStatus = {
-        shouldPlay: playing,
-        shouldCorrectPitch: playback.shouldCorrectPitch,
-      }
-
-      const playbackObject = await Audio.Sound.createAsync(
-        source,
-        initialStatus,
-        onPlaybackStatusUpdate
-      )
-      playback.setPlaybackObject(playbackObject)
-    }
-  }
-
   useEffect(() => {
+    const loadNewPlaybackInstance = async (playing: boolean) => {
+      // check if the song that is being played is the same as the one that is being requested
+      // if (playback.playbackInstance?.sound !== null) {
+      //   await playback.playbackInstance?.sound.unloadAsync()
+      //   playback.setplaybackInstance(null)
+      // }
+
+      if (!playback.playbackInstance?.sound) {
+        const source = { uri: audioUrl }
+        const initialStatus = {
+          shouldPlay: playing,
+          shouldCorrectPitch: playback.shouldCorrectPitch,
+        }
+
+        const playbackInstance = await Audio.Sound.createAsync(
+          source,
+          initialStatus,
+          onPlaybackStatusUpdate
+        )
+        playback.setPlaybackInstance(playbackInstance)
+      }
+    }
+
     Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
       staysActiveInBackground: false,
@@ -125,14 +104,14 @@ export default function Player({
   }, [])
 
   const onPlayPausePressed = () => {
-    if (playback.playbackObject?.sound != null) {
+    if (playback.playbackInstance?.sound != null) {
       if (playback.isPlaying) {
-        playback.playbackObject?.sound.pauseAsync().then(() => {
+        playback.playbackInstance?.sound.pauseAsync().then(() => {
           console.log('paused')
           playback.setIsPlaying(false)
         })
       } else {
-        playback.playbackObject.sound.playAsync().then(() => {
+        playback.playbackInstance.sound.playAsync().then(() => {
           console.log('playing')
           playback.setIsPlaying(true)
         })
@@ -140,36 +119,40 @@ export default function Player({
     }
   }
 
-  // const onSeekSliderValueChange = () => {
-  //   if (playback.playbackInstance != null && !isSeeking) {
-  //     setIsSeeking(true)
-  //     setShouldPlayAtEndOfSeek(playback.shouldPlay)
-  //     playback.playbackInstance.pauseAsync()
-  //   }
-  // }
-  // const onSeekSliderSlidingComplete = async (value: number) => {
-  //   if (playback.playbackInstance != null) {
-  //     setIsSeeking(false)
-  //     const seekPosition = value * playback.playbackInstanceDuration
-  //     if (shouldPlayAtEndOfSeek) {
-  //       playback.playbackInstance.playFromPositionAsync(seekPosition)
-  //     } else {
-  //       playback.playbackInstance.setPositionAsync(seekPosition)
-  //     }
-  //   }
-  // }
-  // const getSeekSliderPosition = () => {
-  //   if (
-  //     playback.playbackInstance != null &&
-  //     playback.playbackInstancePosition != null &&
-  //     playback.playbackInstanceDuration != null
-  //   ) {
-  //     return (
-  //       playback.playbackInstancePosition / playback.playbackInstanceDuration
-  //     )
-  //   }
-  //   return 0
-  // }
+  const onSliderValueChange = () => {
+    if (playback.playbackInstance?.sound != null && !isSeeking) {
+      console.log('seeking')
+      setIsSeeking(true)
+      setShouldPlayAtEndOfSeek(playback.isPlaying)
+      playback.playbackInstance?.sound.pauseAsync()
+    }
+  }
+  const onSliderValueChangeComplete = (value: number) => {
+    if (playback.playbackInstance?.sound != null) {
+      setIsSeeking(false)
+      const seekPosition = value * playback.playbackInstanceDuration
+      if (shouldPlayAtEndOfSeek) {
+        playback.playbackInstance.sound.playFromPositionAsync(seekPosition)
+      } else {
+        playback.playbackInstance.sound.setPositionAsync(seekPosition)
+      }
+    }
+  }
+  const getPlaybackSliderPosition = () => {
+    if (
+      playback.playbackInstance?.sound != null &&
+      playback.playbackInstancePosition != null &&
+      playback.playbackInstanceDuration != null
+    ) {
+      console.log(playback.playbackInstancePosition)
+      console.log(playback.playbackInstanceDuration)
+      const position =
+        playback.playbackInstancePosition / playback.playbackInstanceDuration
+      console.log(position)
+      return position
+    }
+    return 0
+  }
   const getMMSSFromMillis = (millis: number) => {
     const totalSeconds = millis / 1000
     const seconds = Math.floor(totalSeconds % 60)
@@ -185,23 +168,16 @@ export default function Player({
     return `${padWithZero(minutes)}:${padWithZero(seconds)}`
   }
 
-  // const getTimestamp = () => {
-  //   if (
-  //     playback.playbackInstance != null &&
-  //     playback.playbackInstancePosition != null &&
-  //     playback.playbackInstanceDuration != null
-  //   ) {
-  //     return `${getMMSSFromMillis(
-  //       playback.playbackInstancePosition
-  //     )} / ${getMMSSFromMillis(playback.playbackInstanceDuration)}`
-  //   }
-  //   return ''
-  // }
   const goTenSecondForwardOrBackward = (value: number) => {
-    playback.playbackObject?.sound.setStatusAsync({
+    playback.playbackInstance?.sound.setStatusAsync({
       positionMillis: playback.playbackInstancePosition + value,
     })
   }
+
+  const timeElapsed = getMMSSFromMillis(playback.playbackInstancePosition)
+  const timeRemaining = getMMSSFromMillis(
+    playback.playbackInstanceDuration - playback.playbackInstancePosition
+  )
 
   return (
     <Box h="100%" paddingX={3} safeAreaTop safeAreaX variant="layout">
@@ -234,36 +210,44 @@ export default function Player({
           <Heading>{episode.episodeTitle}</Heading>
           <Text>{episode.podcastTitle}</Text>
         </Box>
-        <Box
-          flexDirection="row"
-          width="100%"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <IconButton onPress={() => goTenSecondForwardOrBackward(-10000)}>
-            <AntDesign name="stepbackward" size={20} color="white" />
-          </IconButton>
-          {playback.playbackObject?.status.isLoaded && (
-            <IconButton
-              onPress={() => onPlayPausePressed()}
-              accessibilityLabel="Play"
-              icon={
-                playback.isPlaying ? (
-                  <AntDesign name="pausecircle" size={60} color="white" />
-                ) : (
-                  <AntDesign name="play" size={60} color="white" />
-                )
-              }
-              size="md"
-              _pressed={{ bg: 'coolGray.500' }}
-            />
-          )}
+        {playback.playbackInstance?.status.isLoaded && (
+          <VStack width="100%">
+            <HStack width="100%" alignItems="center" justifyContent="center">
+              <IconButton onPress={() => goTenSecondForwardOrBackward(-10000)}>
+                <AntDesign name="stepbackward" size={20} color="white" />
+              </IconButton>
+              <IconButton
+                onPress={onPlayPausePressed}
+                accessibilityLabel="Play"
+                icon={
+                  playback.isPlaying ? (
+                    <AntDesign name="pausecircle" size={60} color="white" />
+                  ) : (
+                    <AntDesign name="play" size={60} color="white" />
+                  )
+                }
+                size="md"
+                _pressed={{ bg: 'coolGray.500' }}
+              />
 
-          <IconButton onPress={() => goTenSecondForwardOrBackward(10000)}>
-            <AntDesign name="stepforward" size={20} color="white" />
-          </IconButton>
-        </Box>
-        <PlaybackSlider />
+              <IconButton onPress={() => goTenSecondForwardOrBackward(10000)}>
+                <AntDesign name="stepforward" size={20} color="white" />
+              </IconButton>
+            </HStack>
+            <Slider
+              value={getPlaybackSliderPosition()}
+              onValueChange={() => onSliderValueChange}
+              onSlidingComplete={onSliderValueChangeComplete}
+              disabled={!playback.playbackInstance?.status.isLoaded}
+              thumbTintColor="white"
+              style={{ width: '100%', height: 40 }}
+            />
+          </VStack>
+        )}
+        <HStack width="100%" alignItems="center" justifyContent="space-between">
+          <Text>{timeElapsed}</Text>
+          <Text>{timeRemaining}</Text>
+        </HStack>
       </VStack>
     </Box>
   )
