@@ -2,33 +2,26 @@ import { Audio } from 'expo-av'
 import { create } from 'zustand'
 
 interface Playback {
-  playbackInstance: Audio.Sound | null
-  playbackInstanceName: string
+  setPlaybackObject: (playbackInstance: Audio.SoundObject | null) => void
+  playbackObject: Audio.SoundObject | null
   muted: boolean
   playbackInstancePosition: number
   playbackInstanceDuration: number
   shouldPlay: boolean
-  isPlaying: boolean
-  isBuffering: boolean
-  isLoading: boolean
   shouldCorrectPitch: boolean
   volume: number
-  setPlaybackInstance: (playbackInstance: Audio.Sound | null) => void
-  setPlaybackInstanceName: (playbackInstanceName: string) => void
   setMuted: (muted: boolean) => void
   setPlaybackInstancePosition: (playbackInstancePosition: number) => void
   setPlaybackInstanceDuration: (playbackInstanceDuration: number) => void
   setShouldPlay: (shouldPlay: boolean) => void
-  setIsPlaying: (isPlaying: boolean) => void
-  setIsBuffering: (isBuffering: boolean) => void
-  setIsLoading: (isLoading: boolean) => void
   setShouldCorrectPitch: (shouldCorrectPitch: boolean) => void
   setVolume: (volume: number) => void
+  isPlaying: boolean
+  setIsPlaying: (isPlaying: boolean) => void
 }
 
 export const usePlaybackStore = create<Playback>((set, get) => ({
-  playbackInstance: null,
-  playbackInstanceName: 'LOADING_STRING',
+  playbackObject: null,
   muted: false,
   playbackInstancePosition: 0,
   playbackInstanceDuration: 0,
@@ -38,21 +31,18 @@ export const usePlaybackStore = create<Playback>((set, get) => ({
   isLoading: false,
   shouldCorrectPitch: false,
   volume: 1.0,
-  setPlaybackInstanceName: (playbackInstanceName: string) =>
-    set({ playbackInstanceName }),
+
+  setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
   setMuted: (muted: boolean) => set({ muted }),
   setPlaybackInstancePosition: (playbackInstancePosition: number) =>
     set({ playbackInstancePosition }),
   setPlaybackInstanceDuration: (playbackInstanceDuration: number) =>
     set({ playbackInstanceDuration }),
   setShouldPlay: (shouldPlay: boolean) => set({ shouldPlay }),
-  setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
-  setIsBuffering: (isBuffering: boolean) => set({ isBuffering }),
-  setIsLoading: (isLoading: boolean) => set({ isLoading }),
   setShouldCorrectPitch: (shouldCorrectPitch: boolean) =>
     set({ shouldCorrectPitch }),
   setVolume: (volume: number) => set({ volume }),
-  setPlaybackInstance: (playbackInstance: Audio.Sound | null) => {
-    set({ playbackInstance })
+  setPlaybackObject: (playbackObject: Audio.SoundObject | null) => {
+    set({ playbackObject })
   },
 }))

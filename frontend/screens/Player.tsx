@@ -8,12 +8,36 @@ import {
   HStack,
   IconButton,
   Image,
+  Slider,
   Text,
   VStack,
 } from 'native-base'
 
 import { usePlaybackStore } from '../hooks/store'
 import { PodcastStackScreenProps } from '../types'
+
+const PlaybackSlider = ({
+  setOnChangeValue,
+}: {
+  setOnChangeValue: (v: number) => void
+}) => {
+  return (
+    <Box alignItems="center" w="100%">
+      <Slider
+        defaultValue={70}
+        colorScheme="cyan"
+        onChange={(v) => {
+          setOnChangeValue(Math.floor(v))
+        }}
+      >
+        <Slider.Track>
+          <Slider.FilledTrack />
+        </Slider.Track>
+        <Slider.Thumb />
+      </Slider>
+    </Box>
+  )
+}
 
 type EpisodeProps = {
   podcastTitle: string
@@ -51,14 +75,10 @@ export default function Player({
   const playback = usePlaybackStore()
 
   const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
-    console.log(status)
     if (status.isLoaded) {
-      playback.setIsLoading(false)
       playback.setPlaybackInstancePosition(status.positionMillis)
       playback.setPlaybackInstanceDuration(status.durationMillis as number)
       playback.setShouldPlay(status.shouldPlay)
-      playback.setIsPlaying(status.isPlaying)
-      playback.setIsBuffering(status.isBuffering)
       playback.setMuted(status.isMuted)
       playback.setVolume(status.volume)
       playback.setShouldCorrectPitch(status.shouldCorrectPitch)
@@ -66,51 +86,90 @@ export default function Player({
       console.log(`FATAL PLAYER ERROR: ${status.error}`)
     }
   }
+
+  const loadNewPlaybackInstance = async (playing: boolean) => {
+    // check if the song that is being played is the same as the one that is being requested
+    // if (playback.playbackObject?.sound !== null) {
+    //   await playback.playbackObject?.sound.unloadAsync()
+    //   playback.setPlaybackObject(null)
+    // }
+
+    if (!playback.playbackObject?.sound) {
+      const source = { uri: audioUrl }
+      const initialStatus = {
+        shouldPlay: playing,
+        shouldCorrectPitch: playback.shouldCorrectPitch,
+      }
+
+      const playbackObject = await Audio.Sound.createAsync(
+        source,
+        initialStatus,
+        onPlaybackStatusUpdate
+      )
+      playback.setPlaybackObject(playbackObject)
+    }
+  }
+
+  useEffect(() => {
+    Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      staysActiveInBackground: false,
+      // interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+      playsInSilentModeIOS: true,
+      shouldDuckAndroid: true,
+      // interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+      playThroughEarpieceAndroid: false,
+    })
+
+    loadNewPlaybackInstance(playback.isPlaying)
+  }, [])
+
   const onPlayPausePressed = () => {
-    if (playback.playbackInstance != null) {
+    if (playback.playbackObject?.sound != null) {
       if (playback.isPlaying) {
-        playback.playbackInstance.pauseAsync().then(() => {
+        playback.playbackObject?.sound.pauseAsync().then(() => {
           console.log('paused')
           playback.setIsPlaying(false)
         })
       } else {
-        playback.playbackInstance.playAsync().then(() => {
+        playback.playbackObject.sound.playAsync().then(() => {
           console.log('playing')
           playback.setIsPlaying(true)
         })
       }
     }
   }
-  const onSeekSliderValueChange = () => {
-    if (playback.playbackInstance != null && !isSeeking) {
-      setIsSeeking(true)
-      setShouldPlayAtEndOfSeek(playback.shouldPlay)
-      playback.playbackInstance.pauseAsync()
-    }
-  }
-  const onSeekSliderSlidingComplete = async (value: number) => {
-    if (playback.playbackInstance != null) {
-      setIsSeeking(false)
-      const seekPosition = value * playback.playbackInstanceDuration
-      if (shouldPlayAtEndOfSeek) {
-        playback.playbackInstance.playFromPositionAsync(seekPosition)
-      } else {
-        playback.playbackInstance.setPositionAsync(seekPosition)
-      }
-    }
-  }
-  const getSeekSliderPosition = () => {
-    if (
-      playback.playbackInstance != null &&
-      playback.playbackInstancePosition != null &&
-      playback.playbackInstanceDuration != null
-    ) {
-      return (
-        playback.playbackInstancePosition / playback.playbackInstanceDuration
-      )
-    }
-    return 0
-  }
+
+  // const onSeekSliderValueChange = () => {
+  //   if (playback.playbackInstance != null && !isSeeking) {
+  //     setIsSeeking(true)
+  //     setShouldPlayAtEndOfSeek(playback.shouldPlay)
+  //     playback.playbackInstance.pauseAsync()
+  //   }
+  // }
+  // const onSeekSliderSlidingComplete = async (value: number) => {
+  //   if (playback.playbackInstance != null) {
+  //     setIsSeeking(false)
+  //     const seekPosition = value * playback.playbackInstanceDuration
+  //     if (shouldPlayAtEndOfSeek) {
+  //       playback.playbackInstance.playFromPositionAsync(seekPosition)
+  //     } else {
+  //       playback.playbackInstance.setPositionAsync(seekPosition)
+  //     }
+  //   }
+  // }
+  // const getSeekSliderPosition = () => {
+  //   if (
+  //     playback.playbackInstance != null &&
+  //     playback.playbackInstancePosition != null &&
+  //     playback.playbackInstanceDuration != null
+  //   ) {
+  //     return (
+  //       playback.playbackInstancePosition / playback.playbackInstanceDuration
+  //     )
+  //   }
+  //   return 0
+  // }
   const getMMSSFromMillis = (millis: number) => {
     const totalSeconds = millis / 1000
     const seconds = Math.floor(totalSeconds % 60)
@@ -126,57 +185,23 @@ export default function Player({
     return `${padWithZero(minutes)}:${padWithZero(seconds)}`
   }
 
-  const getTimestamp = () => {
-    if (
-      playback.playbackInstance != null &&
-      playback.playbackInstancePosition != null &&
-      playback.playbackInstanceDuration != null
-    ) {
-      return `${getMMSSFromMillis(
-        playback.playbackInstancePosition
-      )} / ${getMMSSFromMillis(playback.playbackInstanceDuration)}`
-    }
-    return ''
-  }
+  // const getTimestamp = () => {
+  //   if (
+  //     playback.playbackInstance != null &&
+  //     playback.playbackInstancePosition != null &&
+  //     playback.playbackInstanceDuration != null
+  //   ) {
+  //     return `${getMMSSFromMillis(
+  //       playback.playbackInstancePosition
+  //     )} / ${getMMSSFromMillis(playback.playbackInstanceDuration)}`
+  //   }
+  //   return ''
+  // }
   const goTenSecondForwardOrBackward = (value: number) => {
-    playback.playbackInstance?.setStatusAsync({
+    playback.playbackObject?.sound.setStatusAsync({
       positionMillis: playback.playbackInstancePosition + value,
     })
   }
-
-  const loadNewPlaybackInstance = async (playing: boolean) => {
-    // if (playback.playbackInstance !== null) {
-    //   await playback.playbackInstance.unloadAsync()
-    //   playback.setPlaybackInstance(null)
-    // }
-    const source = { uri: audioUrl }
-    const initialStatus = {
-      shouldPlay: playback.isPlaying,
-      shouldCorrectPitch: playback.shouldCorrectPitch,
-    }
-
-    const { sound } = await Audio.Sound.createAsync(
-      source,
-      initialStatus,
-      onPlaybackStatusUpdate
-    )
-    playback.setPlaybackInstance(sound)
-    playback.setPlaybackInstanceName(title)
-    playback.setIsLoading(false)
-  }
-
-  useEffect(() => {
-    Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      staysActiveInBackground: false,
-      // interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
-      // interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
-      playThroughEarpieceAndroid: false,
-    })
-    loadNewPlaybackInstance(false)
-  }, [playback])
 
   return (
     <Box h="100%" paddingX={3} safeAreaTop safeAreaX variant="layout">
@@ -218,7 +243,7 @@ export default function Player({
           <IconButton onPress={() => goTenSecondForwardOrBackward(-10000)}>
             <AntDesign name="stepbackward" size={20} color="white" />
           </IconButton>
-          {playback.isLoading && (
+          {playback.playbackObject?.status.isLoaded && (
             <IconButton
               onPress={() => onPlayPausePressed()}
               accessibilityLabel="Play"
@@ -233,10 +258,12 @@ export default function Player({
               _pressed={{ bg: 'coolGray.500' }}
             />
           )}
+
           <IconButton onPress={() => goTenSecondForwardOrBackward(10000)}>
             <AntDesign name="stepforward" size={20} color="white" />
           </IconButton>
         </Box>
+        <PlaybackSlider />
       </VStack>
     </Box>
   )
