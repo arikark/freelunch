@@ -20,6 +20,9 @@ module.exports = {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.arielkark.FreeLunch',
+      infoPlist: {
+        UIBackgroundModes: ['audio'],
+      },
     },
     android: {
       adaptiveIcon: {

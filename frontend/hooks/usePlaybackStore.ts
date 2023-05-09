@@ -18,6 +18,8 @@ interface Playback {
   setVolume: (volume: number) => void
   isPlaying: boolean
   setIsPlaying: (isPlaying: boolean) => void
+  setIsBuffering: (isBuffering: boolean) => void
+  isBuffering: boolean
 }
 
 export const usePlaybackStore = create<Playback>((set, get) => ({
@@ -31,13 +33,11 @@ export const usePlaybackStore = create<Playback>((set, get) => ({
   isLoading: false,
   shouldCorrectPitch: false,
   volume: 1.0,
-
+  setIsBuffering: (isBuffering: boolean) => set({ isBuffering }),
   setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
   setMuted: (muted: boolean) => set({ muted }),
-  setPlaybackInstancePosition: (playbackInstancePosition: number) => {
-    console.log('setPlaybackInstancePosition', playbackInstancePosition)
-    set({ playbackInstancePosition })
-  },
+  setPlaybackInstancePosition: (playbackInstancePosition: number) =>
+    set({ playbackInstancePosition }),
   setPlaybackInstanceDuration: (playbackInstanceDuration: number) =>
     set({ playbackInstanceDuration }),
   setShouldPlay: (shouldPlay: boolean) => set({ shouldPlay }),

@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons'
 import Slider from '@react-native-community/slider'
-import { Audio, AVPlaybackStatus } from 'expo-av'
+import {
+  Audio,
+  AVPlaybackStatus,
+  InterruptionModeAndroid,
+  InterruptionModeIOS,
+} from 'expo-av'
 import {
   Box,
   ChevronDownIcon,
@@ -9,11 +14,12 @@ import {
   HStack,
   IconButton,
   Image,
+  Spinner,
   Text,
   VStack,
 } from 'native-base'
 
-import { usePlaybackStore } from '../hooks/store'
+import { usePlaybackStore } from '../hooks/usePlaybackStore'
 import { PodcastStackScreenProps } from '../types'
 
 type EpisodeProps = {
@@ -55,6 +61,7 @@ export default function Player({
 
   const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
     if (status.isLoaded) {
+      playback.setIsBuffering(status.isBuffering)
       playback.setPlaybackInstancePosition(status.positionMillis)
       playback.setPlaybackInstanceDuration(status.durationMillis as number)
       playback.setShouldPlay(status.shouldPlay)
@@ -92,11 +99,12 @@ export default function Player({
 
     Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
-      staysActiveInBackground: false,
-      // interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+
+      staysActiveInBackground: true,
+      interruptionModeIOS: InterruptionModeIOS.DoNotMix,
       playsInSilentModeIOS: true,
       shouldDuckAndroid: true,
-      // interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+      interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
       playThroughEarpieceAndroid: false,
     })
 
@@ -107,12 +115,10 @@ export default function Player({
     if (playback.playbackInstance?.sound != null) {
       if (playback.isPlaying) {
         playback.playbackInstance?.sound.pauseAsync().then(() => {
-          console.log('paused')
           playback.setIsPlaying(false)
         })
       } else {
         playback.playbackInstance.sound.playAsync().then(() => {
-          console.log('playing')
           playback.setIsPlaying(true)
         })
       }
@@ -121,7 +127,6 @@ export default function Player({
 
   const onSliderValueChange = () => {
     if (playback.playbackInstance?.sound != null && !isSeeking) {
-      console.log('seeking')
       setIsSeeking(true)
       setShouldPlayAtEndOfSeek(playback.isPlaying)
       playback.playbackInstance?.sound.pauseAsync()
@@ -144,11 +149,8 @@ export default function Player({
       playback.playbackInstancePosition != null &&
       playback.playbackInstanceDuration != null
     ) {
-      console.log(playback.playbackInstancePosition)
-      console.log(playback.playbackInstanceDuration)
       const position =
         playback.playbackInstancePosition / playback.playbackInstanceDuration
-      console.log(position)
       return position
     }
     return 0
@@ -179,7 +181,7 @@ export default function Player({
     playback.playbackInstanceDuration - playback.playbackInstancePosition
   )
 
-  return (
+  return playback.playbackInstance?.status.isLoaded ? (
     <Box h="100%" paddingX={3} safeAreaTop safeAreaX variant="layout">
       <VStack minH="90%" alignItems="center">
         <HStack width="100%" alignItems="center" justifyContent="flex-start">
@@ -210,45 +212,54 @@ export default function Player({
           <Heading>{episode.episodeTitle}</Heading>
           <Text>{episode.podcastTitle}</Text>
         </Box>
-        {playback.playbackInstance?.status.isLoaded && (
-          <VStack width="100%">
-            <HStack width="100%" alignItems="center" justifyContent="center">
-              <IconButton onPress={() => goTenSecondForwardOrBackward(-10000)}>
-                <AntDesign name="stepbackward" size={20} color="white" />
-              </IconButton>
-              <IconButton
-                onPress={onPlayPausePressed}
-                accessibilityLabel="Play"
-                icon={
-                  playback.isPlaying ? (
-                    <AntDesign name="pausecircle" size={60} color="white" />
-                  ) : (
-                    <AntDesign name="play" size={60} color="white" />
-                  )
-                }
-                size="md"
-                _pressed={{ bg: 'coolGray.500' }}
-              />
-
-              <IconButton onPress={() => goTenSecondForwardOrBackward(10000)}>
-                <AntDesign name="stepforward" size={20} color="white" />
-              </IconButton>
-            </HStack>
-            <Slider
-              value={getPlaybackSliderPosition()}
-              onValueChange={() => onSliderValueChange}
-              onSlidingComplete={onSliderValueChangeComplete}
-              disabled={!playback.playbackInstance?.status.isLoaded}
-              thumbTintColor="white"
-              style={{ width: '100%', height: 40 }}
+        <VStack width="100%">
+          <HStack width="100%" alignItems="center" justifyContent="center">
+            <IconButton onPress={() => goTenSecondForwardOrBackward(-10000)}>
+              <AntDesign name="stepbackward" size={20} color="white" />
+            </IconButton>
+            <IconButton
+              onPress={onPlayPausePressed}
+              accessibilityLabel="Play"
+              icon={
+                playback.isPlaying ? (
+                  <AntDesign name="pausecircle" size={60} color="white" />
+                ) : (
+                  <AntDesign name="play" size={60} color="white" />
+                )
+              }
+              size="md"
+              _pressed={{ bg: 'coolGray.500' }}
             />
-          </VStack>
-        )}
+
+            <IconButton onPress={() => goTenSecondForwardOrBackward(10000)}>
+              <AntDesign name="stepforward" size={20} color="white" />
+            </IconButton>
+          </HStack>
+          <Slider
+            value={getPlaybackSliderPosition()}
+            onValueChange={() => onSliderValueChange}
+            onSlidingComplete={onSliderValueChangeComplete}
+            disabled={!playback.playbackInstance?.status.isLoaded}
+            thumbTintColor="white"
+            style={{ width: '100%', height: 40 }}
+          />
+        </VStack>
         <HStack width="100%" alignItems="center" justifyContent="space-between">
           <Text>{timeElapsed}</Text>
           <Text>{timeRemaining}</Text>
         </HStack>
       </VStack>
+    </Box>
+  ) : (
+    <Box
+      h="100%"
+      safeAreaTop
+      safeAreaX
+      variant="layout"
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Spinner accessibilityLabel="Loading episodes" />
     </Box>
   )
 }
