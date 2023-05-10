@@ -1,0 +1,13 @@
+{
+  "body": {
+    "content": "ewogICAgImRhdGEiOiB7fQp9",
+    "file": false,
+    "fileSize": false
+  },
+  "headers": {
+    "content-type": "application/json"
+  },
+  "method": "POST",
+  "title": "Cloud Function",
+  "url": "http://127.0.0.1:5001/free-lunch-media/australia-southeast1/getPodcasts"
+}

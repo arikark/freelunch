@@ -1,6 +1,5 @@
 import React from 'react'
 import { SectionListProps } from 'react-native'
-import { useQuery } from 'react-query'
 import { useNavigation } from '@react-navigation/native'
 import {
   Heading,
@@ -11,13 +10,14 @@ import {
   useColorMode,
   VStack,
 } from 'native-base'
+import { z } from 'zod'
 
-import { getPodcasts } from '../api/firebase'
 import { Layout } from '../components/Layout'
 import {
   PodcastMenuItem,
   PodcastMenuItemProps,
 } from '../components/PodcastMenuItem'
+import { useGetContent } from '../hooks/useGetContent'
 import { PodcastStackScreenProps } from '../types'
 
 const podcasts: SectionListProps<PodcastMenuItemProps> = {
@@ -101,13 +101,25 @@ const podcasts: SectionListProps<PodcastMenuItemProps> = {
   ],
 }
 
+const podcastZ = z.object({
+  name: z.string(),
+  url: z.string(),
+})
+
+const PodcastsZ = z.array(podcastZ)
+const query = `*[_type == "podcast"]{
+  name,
+  url
+}
+`
+
 function PodcastGallery() {
   const { navigate } = useNavigation()
-  const { isLoading, error, data, refetch } = useQuery<
-    PodcastMenuItemProps[],
-    Error
-  >(['podcasts'], getPodcasts)
-
+  const { isLoading, error, data, refetch } = useGetContent<typeof PodcastsZ>(
+    'podcasts',
+    PodcastsZ,
+    query
+  )
   return (
     <VStack alignItems="center">
       <HStack justifyContent="space-between">

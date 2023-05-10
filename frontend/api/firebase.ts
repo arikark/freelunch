@@ -1,27 +1,20 @@
 import { initializeApp } from 'firebase/app'
-import { getFunctions, httpsCallable } from 'firebase/functions'
+import { connectFunctionsEmulator, getFunctions } from 'firebase/functions'
 
-import { PodcastMenuItemProps } from '../components/PodcastMenuItem'
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyCQdmtdi15On5QOlHyaR1I_zwcn1JypIIg',
-  authDomain: 'free-lunch-media.firebaseapp.com',
-  projectId: 'free-lunch-media',
-  storageBucket: 'free-lunch-media.appspot.com',
-  messagingSenderId: '406658712723',
-  appId: '1:406658712723:web:cc324c11ba8a12f1a63966',
-  measurementId: 'G-HJJL41CG7Q',
+export const firebaseConfig = {
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 }
 
-// Initialize Firebase
-export const app = initializeApp(firebaseConfig)
-const functions = getFunctions(app, 'australia-southeast1')
+export const firebaseApp = initializeApp(firebaseConfig)
 
-export const getPodcasts = () =>
-  httpsCallable<unknown, PodcastMenuItemProps[]>(functions, 'getPodcasts')()
-    .then((result) => {
-      return result.data
-    })
-    .catch((error) => {
-      return error
-    })
+export const functions = getFunctions(firebaseApp, 'australia-southeast1')
+
+if (__DEV__) {
+  connectFunctionsEmulator(functions, 'localhost', 5001)
+}
