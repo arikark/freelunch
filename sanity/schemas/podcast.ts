@@ -1,4 +1,6 @@
-const podcast = {
+import {defineType} from 'sanity'
+
+const podcast = defineType({
   name: 'podcast',
   type: 'document',
   title: 'Podcast',
@@ -9,11 +11,32 @@ const podcast = {
       title: 'Name',
     },
     {
-      name: 'url',
-      type: 'string',
-      title: 'URL',
+      name: 'description',
+      type: 'text',
+      title: 'Description',
+    },
+    {
+      name: 'image',
+      type: 'image',
+      title: 'Image',
+    },
+
+    {
+      name: 'episodes',
+      type: 'array',
+      title: 'Episodes',
+      of: [
+        {
+          type: 'reference',
+          to: [
+            {
+              type: 'episode',
+            },
+          ],
+        },
+      ],
     },
   ],
-}
+})
 
 export default podcast

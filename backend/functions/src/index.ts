@@ -23,7 +23,7 @@ export const getContent = functions
   .region('australia-southeast1')
   .https.onCall(async (query, context) => {
     try {
-      functions.logger.info(query, { structuredData: true })
+      // functions.logger.info(query, { structuredData: true })
       const result = await sanityClient.fetch(query)
       return result
     } catch (error) {

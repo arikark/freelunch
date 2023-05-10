@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 import { httpsCallable } from 'firebase/functions'
-import { ZodError, ZodType } from 'zod'
+import { z, ZodError, ZodType } from 'zod'
 
 import { functions } from '../api/firebase'
 
@@ -25,5 +25,7 @@ export const useGetContent = <T extends ZodType>(
         throw new Error(error.message)
       })
 
-  return useQuery<T, Error>([cacheName, groqQuery], getter)
+  type InferredType = z.infer<T>
+
+  return useQuery<InferredType, Error>([cacheName, groqQuery], getter)
 }

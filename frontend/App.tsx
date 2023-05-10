@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar'
 import { extendTheme, NativeBaseProvider } from 'native-base'
 import * as Sentry from 'sentry-expo'
 
-import 'dotenv/config'
+// import 'dotenv/config'
 import { onAppStateChange, queryClient } from './api/reactquery'
 import { useAppState } from './hooks/useAppState'
 import useCachedResources from './hooks/useCachedResources'
