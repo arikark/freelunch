@@ -1,5 +1,6 @@
 import React from 'react'
 import { QueryClientProvider } from 'react-query'
+import { ErrorBoundary } from '@sentry/react-native'
 import { StatusBar } from 'expo-status-bar'
 import { extendTheme, NativeBaseProvider } from 'native-base'
 import * as Sentry from 'sentry-expo'
@@ -72,12 +73,14 @@ export default function App() {
     return null
   } else {
     return (
-      <NativeBaseProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-          <Navigation />
-          <StatusBar />
-        </QueryClientProvider>
-      </NativeBaseProvider>
+      <ErrorBoundary>
+        <NativeBaseProvider theme={theme}>
+          <QueryClientProvider client={queryClient}>
+            <Navigation />
+            <StatusBar />
+          </QueryClientProvider>
+        </NativeBaseProvider>
+      </ErrorBoundary>
     )
   }
 }

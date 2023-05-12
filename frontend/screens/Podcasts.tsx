@@ -140,16 +140,16 @@ export default function Podcasts({
   ]
 
   return (
-    <Layout>
-      <Suspense
-        fallback={
-          <Layout>
-            <Center h="100%" bg="pink">
-              <Spinner accessibilityLabel="Loading podcasts" color="blue.500" />
-            </Center>
-          </Layout>
-        }
-      >
+    <Suspense
+      fallback={
+        <Layout>
+          <Center h="100%" bg="pink">
+            <Spinner accessibilityLabel="Loading podcasts" color="blue.500" />
+          </Center>
+        </Layout>
+      }
+    >
+      <Layout>
         <Heading>Podcasts</Heading>
 
         <SectionList
@@ -165,7 +165,7 @@ export default function Podcasts({
           showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => item.title.toString()}
         />
-      </Suspense>
-    </Layout>
+      </Layout>
+    </Suspense>
   )
 }
