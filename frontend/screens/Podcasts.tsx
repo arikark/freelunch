@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import {
   Center,
   Heading,
@@ -22,6 +22,7 @@ const query = `*[_type == "podcast"]{
     _createdAt,
     name,
     description,
+    _id,
   },
 }
 `
@@ -36,6 +37,7 @@ export const podcastsZ = z.array(
         _createdAt: z.string(),
         name: z.string(),
         description: z.string(),
+        _id: z.string(),
       })
     ),
   })
@@ -119,51 +121,51 @@ export default function Podcasts({
     isLoading,
     error,
     data: podcasts,
-    refetch,
   } = useGetContent<typeof podcastsZ>('podcasts', podcastsZ, query)
   const { toggleColorMode } = useColorMode()
 
   // convert PodcastsZ data to the format that SectionList expects
-  const sections = podcasts
-    ? podcasts.map((podcast) => ({
-        data: podcast.episodes.map((episode) => ({
-          title: episode.name,
-          description: episode.description,
+  const sections = [
+    {
+      data:
+        podcasts?.map((podcast) => ({
+          title: podcast.name,
+          description: podcast.description,
           image: podcast.imageURL,
           category: 'News',
           latestEpisodeDurationInSeconds: 820,
           latestEpisodeDateCreated: '2020-01-01',
-        })),
-      }))
-    : []
-
-  if (isLoading) {
-    return (
-      <Layout>
-        <Center h="100%">
-          <Spinner accessibilityLabel="Loading podcasts" color="blue.500" />
-        </Center>
-      </Layout>
-    )
-  }
+        })) ?? [],
+    },
+  ]
 
   return (
     <Layout>
-      <Heading>Podcasts</Heading>
+      <Suspense
+        fallback={
+          <Layout>
+            <Center h="100%" bg="pink">
+              <Spinner accessibilityLabel="Loading podcasts" color="blue.500" />
+            </Center>
+          </Layout>
+        }
+      >
+        <Heading>Podcasts</Heading>
 
-      <SectionList
-        sections={sections}
-        // ListHeaderComponent={() => <PodcastGallery />}
-        data={sections}
-        renderItem={({ item, index }) => (
-          <PodcastMenuItem
-            {...item}
-            mb={index === sections[0].data.length - 1 ? '30%' : 0}
-          />
-        )}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(item, index) => item.title.toString()}
-      />
+        <SectionList
+          sections={sections}
+          // ListHeaderComponent={() => <PodcastGallery />}
+          data={sections}
+          renderItem={({ item, index }) => (
+            <PodcastMenuItem
+              {...item}
+              mb={index === sections[0].data.length - 1 ? '30%' : 0}
+            />
+          )}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item, index) => item.title.toString()}
+        />
+      </Suspense>
     </Layout>
   )
 }
