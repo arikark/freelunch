@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import {
   Center,
   Heading,
@@ -139,33 +139,33 @@ export default function Podcasts({
     },
   ]
 
-  return (
-    <Suspense
-      fallback={
-        <Layout>
-          <Center h="100%" bg="pink">
-            <Spinner accessibilityLabel="Loading podcasts" color="blue.500" />
-          </Center>
-        </Layout>
-      }
-    >
+  if (isLoading) {
+    return (
       <Layout>
-        <Heading>Podcasts</Heading>
-
-        <SectionList
-          sections={sections}
-          // ListHeaderComponent={() => <PodcastGallery />}
-          data={sections}
-          renderItem={({ item, index }) => (
-            <PodcastMenuItem
-              {...item}
-              mb={index === sections[0].data.length - 1 ? '30%' : 0}
-            />
-          )}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => item.title.toString()}
-        />
+        <Center h="100%" bg="pink">
+          <Spinner accessibilityLabel="Loading podcasts" color="blue.500" />
+        </Center>
       </Layout>
-    </Suspense>
+    )
+  }
+
+  return (
+    <Layout>
+      <Heading>Podcasts</Heading>
+
+      <SectionList
+        sections={sections}
+        // ListHeaderComponent={() => <PodcastGallery />}
+        data={sections}
+        renderItem={({ item, index }) => (
+          <PodcastMenuItem
+            {...item}
+            mb={index === sections[0].data.length - 1 ? '30%' : 0}
+          />
+        )}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item, index) => item.title.toString()}
+      />
+    </Layout>
   )
 }

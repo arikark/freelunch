@@ -7,6 +7,7 @@ import * as Sentry from 'sentry-expo'
 
 // import 'dotenv/config'
 import { onAppStateChange, queryClient } from './api/reactquery'
+import { config } from './config'
 import { useAppState } from './hooks/useAppState'
 import useCachedResources from './hooks/useCachedResources'
 import { useOnlineManager } from './hooks/useOnlineManager'
@@ -18,7 +19,7 @@ if (__DEV__) {
 }
 
 Sentry.init({
-  dsn: 'https://fc857a04608c4b63b3a6a0df52ab6ab6@o4504179001262080.ingest.sentry.io/4504179003949056',
+  dsn: config.sentry.dsn,
   enableInExpoDevelopment: true,
   debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
 })

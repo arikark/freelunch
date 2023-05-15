@@ -1,8 +1,16 @@
-/* eslint-disable func-names */
+// eslint-disable-next-line func-names
 module.exports = function (api) {
-  api.cache(true)
+  api.cache(false)
   return {
     presets: ['babel-preset-expo'],
-    plugins: ['react-native-reanimated/plugin'],
+    plugins: [
+      [
+        'module:react-native-dotenv',
+        {
+          verbose: false,
+          moduleName: '@env',
+        },
+      ],
+    ],
   }
 }
