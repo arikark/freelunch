@@ -28,6 +28,7 @@ export function PodcastMenuItem({
   category,
   description,
   image,
+
   latestEpisodeDurationInSeconds,
   latestEpisodeDateCreated,
   ...props
@@ -41,7 +42,7 @@ export function PodcastMenuItem({
   const { navigate } = useNavigation()
 
   return (
-    <Pressable onPress={() => navigate('Episodes', { title })} {...props}>
+    <Pressable onPress={() => navigate('Episodes', { title, id })} {...props}>
       {({ isHovered, isFocused, isPressed }) => {
         return (
           <Card
