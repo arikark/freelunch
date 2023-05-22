@@ -20,6 +20,9 @@ interface Playback {
   setIsPlaying: (isPlaying: boolean) => void
   setIsBuffering: (isBuffering: boolean) => void
   isBuffering: boolean
+  trackName: string | null
+  trackURL: string | null
+  setTrackURL: (trackURL: string) => void
 }
 
 export const usePlaybackStore = create<Playback>((set, get) => ({
@@ -47,4 +50,7 @@ export const usePlaybackStore = create<Playback>((set, get) => ({
   setPlaybackInstance: (playbackInstance: Audio.SoundObject | null) => {
     set({ playbackInstance })
   },
+  trackName: null,
+  trackURL: null,
+  setTrackURL: (trackURL: string) => set({ trackURL }),
 }))

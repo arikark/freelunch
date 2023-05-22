@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react'
+import React from 'react'
 import { AntDesign } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
@@ -12,6 +12,9 @@ import {
   Text,
   VStack,
 } from 'native-base'
+
+import { usePlayback } from '../../hooks/usePlayback'
+import { usePlaybackStore } from '../../hooks/usePlaybackStore'
 
 export interface EpisodeMenuItemProps extends IPressableProps {
   name: string
@@ -38,7 +41,9 @@ export function EpisodeMenuItem({
   // Get relative date
   const formattedDate = moment(dateCreated).fromNow()
   const { navigate } = useNavigation()
-  const [isPlaying, setIsPlaying] = useState(false)
+
+  const { setTrackURL, isPlaying } = usePlaybackStore()
+  const { onPlayPausePressed } = usePlayback()
 
   return (
     <Pressable {...props}>
@@ -89,7 +94,10 @@ export function EpisodeMenuItem({
                 }
                 size="md"
                 _pressed={{ bg: 'coolGray.500' }}
-                onPress={() => setIsPlaying(!isPlaying)}
+                onPress={() => {
+                  setTrackURL(audioURL)
+                  onPlayPausePressed()
+                }}
               />
             </HStack>
           </VStack>
