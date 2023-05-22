@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
@@ -9,6 +9,7 @@ import {
   Image,
   IPressableProps,
   Pressable,
+  Spinner,
   Text,
   VStack,
 } from 'native-base'
@@ -37,13 +38,21 @@ export function EpisodeMenuItem({
   const formattedDuration = moment
     .duration(durationInSeconds, 'seconds')
     .humanize()
+  const [isLoading, setIsLoading] = useState(false)
+
+  const { setTrackURL, isPlaying, playbackInstance } = usePlaybackStore()
+  const { onPlayPausePressed } = usePlayback()
+  const isLoaded = playbackInstance?.status.isLoaded
+
+  useEffect(() => {
+    if (isLoaded) {
+      setIsLoading(false)
+    }
+  }, [isLoaded])
 
   // Get relative date
   const formattedDate = moment(dateCreated).fromNow()
   const { navigate } = useNavigation()
-
-  const { setTrackURL, isPlaying } = usePlaybackStore()
-  const { onPlayPausePressed } = usePlayback()
 
   return (
     <Pressable {...props}>
@@ -83,22 +92,29 @@ export function EpisodeMenuItem({
               <Text fontSize={10}>
                 {`${formattedDate} • ${formattedDuration}`}
               </Text>
-              <IconButton
-                accessibilityLabel="Play"
-                icon={
-                  isPlaying ? (
-                    <AntDesign name="pausecircle" size={18} color="white" />
-                  ) : (
-                    <AntDesign name="play" size={18} color="white" />
-                  )
-                }
-                size="md"
-                _pressed={{ bg: 'coolGray.500' }}
-                onPress={() => {
-                  setTrackURL(audioURL)
-                  onPlayPausePressed()
-                }}
-              />
+
+              {isLoading ? (
+                <Spinner size="sm" />
+              ) : (
+                <IconButton
+                  accessibilityLabel="Play"
+                  icon={
+                    isPlaying ? (
+                      <AntDesign name="pausecircle" size={18} color="white" />
+                    ) : (
+                      <AntDesign name="play" size={18} color="white" />
+                    )
+                  }
+                  size="md"
+                  _pressed={{ bg: 'coolGray.500' }}
+                  onPress={() => {
+                    if (!isLoaded) {
+                      setIsLoading(true)
+                    }
+                    onPlayPausePressed(audioURL)
+                  }}
+                />
+              )}
             </HStack>
           </VStack>
         )

@@ -29,50 +29,52 @@ export const usePlayback = () => {
     }
   }
 
-  useEffect(() => {
-    const loadNewPlaybackInstance = async (playing: boolean) => {
-      // check if the song that is being played is the same as the one that is being requested
-      // if so, do nothing
-      // if not, unload the current song and load the new one
-      if (
-        playback.playbackInstance?.sound !== null &&
-        playback.trackURL !== null &&
-        playback.playbackInstance?.status.isLoaded
-      ) {
-        const currentTrackURL = playback.playbackInstance?.status.uri
-        if (currentTrackURL !== playback.trackURL) {
-          await playback.playbackInstance?.sound.unloadAsync()
-          playback.setPlaybackInstance(null)
-        }
-      }
-
-      // if (playback.playbackInstance?.sound !== null) {
-      //   await playback.playbackInstance?.sound.unloadAsync()
-      //   playback.setPlaybackInstance(null)
-      // }
-
-      if (!playback.playbackInstance?.sound && playback.trackURL) {
-        console.log('loading new playback instance')
-        const source = {
-          uri: playback.trackURL,
-        }
-        const initialStatus = {
-          shouldPlay: playing,
-          shouldCorrectPitch: playback.shouldCorrectPitch,
-        }
-
-        const playbackInstance = await Audio.Sound.createAsync(
-          source,
-          initialStatus,
-          onPlaybackStatusUpdate
-        )
-        playback.setPlaybackInstance(playbackInstance)
+  const loadNewPlaybackInstance = async (
+    playing: boolean,
+    audioURL: string
+  ) => {
+    // check if the song that is being played is the same as the one that is being requested
+    // if so, do nothing
+    // if not, unload the current song and load the new one
+    if (
+      playback.playbackInstance?.sound !== null &&
+      audioURL !== null &&
+      playback.playbackInstance?.status.isLoaded
+    ) {
+      const currentTrackURL = playback.playbackInstance?.status.uri
+      if (currentTrackURL !== playback.trackURL) {
+        await playback.playbackInstance?.sound.unloadAsync()
+        playback.setPlaybackInstance(null)
       }
     }
 
+    // if (playback.playbackInstance?.sound !== null) {
+    //   await playback.playbackInstance?.sound.unloadAsync()
+    //   playback.setPlaybackInstance(null)
+    // }
+
+    if (!playback.playbackInstance?.sound) {
+      console.log('loading new playback instance')
+      const source = {
+        uri: audioURL,
+      }
+      const initialStatus = {
+        shouldPlay: playing,
+        shouldCorrectPitch: playback.shouldCorrectPitch,
+      }
+
+      const playbackInstance = await Audio.Sound.createAsync(
+        source,
+        initialStatus,
+        onPlaybackStatusUpdate
+      )
+      playback.setPlaybackInstance(playbackInstance)
+    }
+  }
+
+  useEffect(() => {
     Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
-
       staysActiveInBackground: true,
       interruptionModeIOS: InterruptionModeIOS.DoNotMix,
       playsInSilentModeIOS: true,
@@ -80,21 +82,25 @@ export const usePlayback = () => {
       interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
       playThroughEarpieceAndroid: false,
     })
-
-    loadNewPlaybackInstance(playback.isPlaying)
+    // if (playback.trackURL) {
+    //   loadNewPlaybackInstance(playback.isPlaying, playback.trackURL)
+    // }
   }, [playback.isPlaying, playback.trackURL])
 
-  const onPlayPausePressed = () => {
+  const onPlayPausePressed = async (audioURL: string) => {
     if (playback.playbackInstance?.sound != null) {
       if (playback.isPlaying) {
-        playback.playbackInstance?.sound.pauseAsync().then(() => {
-          playback.setIsPlaying(false)
-        })
+        await playback.playbackInstance?.sound.pauseAsync()
+        playback.setIsPlaying(false)
       } else {
-        playback.playbackInstance.sound.playAsync().then(() => {
-          playback.setIsPlaying(true)
-        })
+        await playback.playbackInstance.sound.playAsync()
+        playback.setIsPlaying(true)
       }
+    } else {
+      loadNewPlaybackInstance(true, audioURL).then(async () => {
+        await playback.playbackInstance?.sound.playAsync()
+        playback.setIsPlaying(true)
+      })
     }
   }
 

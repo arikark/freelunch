@@ -50,6 +50,9 @@ export default function Player({
     timeRemaining,
   } = usePlayback()
 
+  const audioURL =
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+
   const { setTrackURL, playbackInstance, isPlaying } = usePlaybackStore()
 
   return playbackInstance?.status.isLoaded ? (
@@ -89,7 +92,7 @@ export default function Player({
               <AntDesign name="stepbackward" size={20} color="white" />
             </IconButton>
             <IconButton
-              onPress={onPlayPausePressed}
+              onPress={() => onPlayPausePressed(audioURL)}
               accessibilityLabel="Play"
               icon={
                 isPlaying ? (
