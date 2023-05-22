@@ -16,6 +16,7 @@ import {
 
 export interface PodcastMenuItemProps extends IPressableProps {
   title: string
+  id: string
   category: string
   description: string
   image: string
@@ -25,6 +26,7 @@ export interface PodcastMenuItemProps extends IPressableProps {
 
 export function PodcastMenuItem({
   title,
+  id,
   category,
   description,
   image,
@@ -42,7 +44,10 @@ export function PodcastMenuItem({
   const { navigate } = useNavigation()
 
   return (
-    <Pressable onPress={() => navigate('Episodes', { title, id })} {...props}>
+    <Pressable
+      onPress={() => navigate('Episodes', { title, podcastId: id })}
+      {...props}
+    >
       {({ isHovered, isFocused, isPressed }) => {
         return (
           <Card

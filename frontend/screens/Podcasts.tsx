@@ -15,6 +15,7 @@ import { PodcastStackScreenProps } from '../types'
 
 const query = `*[_type == "podcast"]{
   name,
+  _id,
   description,
   "imageURL": image.asset->url,
   episodes[]->{
@@ -28,6 +29,7 @@ const query = `*[_type == "podcast"]{
 `
 export const podcastsZ = z.array(
   z.object({
+    _id: z.string(),
     name: z.string(),
     description: z.string(),
     imageURL: z.string(),
@@ -128,10 +130,11 @@ export default function Podcasts({
   const sections = [
     {
       data:
-        podcasts?.map((podcast) => ({
-          title: podcast.name,
-          description: podcast.description,
-          image: podcast.imageURL,
+        podcasts?.map(({ name, _id, description, imageURL, episodes }) => ({
+          title: name,
+          id: _id,
+          description,
+          image: imageURL,
           category: 'News',
           latestEpisodeDurationInSeconds: 820,
           latestEpisodeDateCreated: '2020-01-01',
