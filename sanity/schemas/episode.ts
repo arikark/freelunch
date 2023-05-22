@@ -35,6 +35,11 @@ const episode = defineType({
       type: 'file',
       title: 'Audio',
     },
+    {
+      name: 'durationInSeconds',
+      type: 'number',
+      title: 'Duration In Seconds',
+    },
   ],
 })
 

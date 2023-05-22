@@ -42,63 +42,80 @@ import { PodcastStackScreenProps } from '../types'
 //   },
 // ]
 
-export const episodeZ = z.object({
+const episodeZ = z.object({
   _id: z.string(),
   name: z.string(),
   description: z.string(),
   imageURL: z.string(),
   audioURL: z.string(),
+  durationInSeconds: z.number(),
 })
-export const episodesZ = z.array(episodeZ)
+
+export const episodesZ = z.object({
+  name: z.string(),
+  _id: z.string(),
+  episodes: z.array(episodeZ),
+})
 
 export default function Episodes({
   navigation,
   route,
 }: PodcastStackScreenProps<'Episodes'>) {
-  const { title, podcastId } = route.params
+  const { podcastId } = route.params
 
-  const query = `*[_type == "episode" && references("${podcastId}", "podcast") ]{
-  name,
-  _id,
-  description,
-  "imageURL": image.asset->url,
-  "audioURL": audio.asset->url,
-}
+  const query = `*[_type == "podcast" && _id == "${podcastId}"][0]{
+    name,
+    _id,
+    "episodes": *[_type == "episode" && references(^._id, "episode") ]{
+      name,
+      _id,
+      description,
+      "imageURL": image.asset->url,
+      "audioURL": audio.asset->url,
+      durationInSeconds,
+    }
+  }
 `
   const {
     isLoading,
     error,
-    data: episodes,
-  } = useGetContent<typeof episodesZ>(`episodes ${podcastId}`, episodesZ, query)
+    data: podcast,
+  } = useGetContent<typeof episodesZ>(`podcast ${podcastId}`, episodesZ, query)
 
   return (
-    <Layout>
-      <HStack alignItems="center">
-        <IconButton
-          icon={<ArrowBackIcon />}
-          onPress={() => navigation.goBack()}
-          mr={4}
-        />
-        <Heading>{title}</Heading>
-      </HStack>
-      <FlatList
-        data={episodes}
-        renderItem={({ item, index }) => (
-          <EpisodeMenuItem
-            {...{ ...item, podcastName: title }}
-            mb={episodes && index === episodes.length - 1 ? '30%' : 0}
-            onPress={() =>
-              navigation.navigate('Episode', {
-                title: item.name,
-                episodeId: item._id,
-              })
-            }
+    podcast && (
+      <Layout>
+        <HStack alignItems="center">
+          <IconButton
+            icon={<ArrowBackIcon />}
+            onPress={() => navigation.goBack()}
+            mr={4}
           />
-        )}
-        ItemSeparatorComponent={() => <Divider />}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(item, index) => item._id.toString()}
-      />
-    </Layout>
+          <Heading>{podcast?.name}</Heading>
+        </HStack>
+        <FlatList
+          data={podcast.episodes}
+          renderItem={({ item, index }) => (
+            <EpisodeMenuItem
+              {...{ ...item, podcastName: podcast.name }}
+              mb={
+                podcast?.episodes && index === podcast.episodes.length - 1
+                  ? '30%'
+                  : 0
+              }
+              onPress={() =>
+                navigation.navigate('Episode', {
+                  title: item.name,
+                  episodeId: item._id,
+                })
+              }
+            />
+          )}
+          ItemSeparatorComponent={() => <Divider />}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item, index) => item._id.toString()}
+        />
+      </Layout>
+    )
   )
 }

@@ -33,6 +33,7 @@ module.exports = {
     },
   ],
   rules: {
+    'no-underscore-dangle': 'off',
     'no-else-return': 'off',
     'no-unused-vars': 'off',
     'no-shadow': 'off',

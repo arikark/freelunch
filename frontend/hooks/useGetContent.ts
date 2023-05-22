@@ -27,5 +27,5 @@ export const useGetContent = <T extends ZodType>(
 
   type InferredType = z.infer<T>
 
-  return useQuery<InferredType, Error>([cacheName, groqQuery], getter)
+  return useQuery<InferredType, Error>([cacheName], getter)
 }
