@@ -1,6 +1,14 @@
 import { Audio } from 'expo-av'
 import { create } from 'zustand'
 
+export type Track = {
+  trackName: string
+  trackURL: string
+  trackId: string
+  trackImageURL: string
+  collectionName: string
+}
+
 interface Playback {
   setPlaybackInstance: (playbackInstance: Audio.SoundObject | null) => void
   playbackInstance: Audio.SoundObject | null
@@ -20,9 +28,8 @@ interface Playback {
   setIsPlaying: (isPlaying: boolean) => void
   setIsBuffering: (isBuffering: boolean) => void
   isBuffering: boolean
-  trackName: string | null
-  trackURL: string | null
-  setTrackURL: (trackURL: string) => void
+  track: Track | null
+  setTrack: (track: Track) => void
 }
 
 export const usePlaybackStore = create<Playback>((set, get) => ({
@@ -50,7 +57,6 @@ export const usePlaybackStore = create<Playback>((set, get) => ({
   setPlaybackInstance: (playbackInstance: Audio.SoundObject | null) => {
     set({ playbackInstance })
   },
-  trackName: null,
-  trackURL: null,
-  setTrackURL: (trackURL: string) => set({ trackURL }),
+  track: null,
+  setTrack: (track: Track) => set({ track }),
 }))

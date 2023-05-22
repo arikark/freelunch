@@ -5,23 +5,17 @@
  */
 
 import * as React from 'react'
-import { AntDesign, FontAwesome } from '@expo/vector-icons'
+import { FontAwesome } from '@expo/vector-icons'
 import {
   BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import {
-  Box,
-  HStack,
-  IconButton,
-  Image,
-  Pressable,
-  Text,
-  VStack,
-} from 'native-base'
+import { Box, HStack, Image, Pressable, Text, VStack } from 'native-base'
 
+import { PlayButton } from '../components/PlayButton/PlayButton'
+import { usePlaybackStore } from '../hooks/usePlaybackStore'
 import Episode from '../screens/Episode'
 import Episodes from '../screens/Episodes'
 import Favourites from '../screens/Favourites'
@@ -111,48 +105,38 @@ function TabBarIcon(props: {
 const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+  const { track } = usePlaybackStore()
   return (
     <>
-      <Pressable
-        w="100%"
-        bgColor="gray.800"
-        onPress={() => navigation.navigate('Player')}
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        py={1}
-        px={4}
-        position="absolute"
-        bottom={70}
-      >
-        <HStack justifyContent="space-between">
-          <Image
-            source={{ uri: 'https://wallpaperaccess.com/full/317501.jpg' }}
-            alt="image base"
-            borderRadius={8}
-            size="xs"
-            mr={4}
-          />
-          <VStack>
-            <Text bold>How Democrats Can Win</Text>
-            <Text color="gray.300">The Daily</Text>
-          </VStack>
-        </HStack>
-        <IconButton
-          p="0"
-          accessibilityLabel="Play"
-          icon={
-            true ? (
-              <AntDesign name="play" size={24} color="white" />
-            ) : (
-              <AntDesign name="pause" size={24} color="white" />
-            )
-          }
-          size="md"
-          _pressed={{ bg: 'coolGray.500' }}
-        />
-      </Pressable>
-
+      {track && (
+        <Pressable
+          w="100%"
+          bgColor="gray.800"
+          onPress={() => navigation.navigate('Player')}
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="space-between"
+          py={1}
+          px={4}
+          position="absolute"
+          bottom={70}
+        >
+          <HStack justifyContent="space-between">
+            <Image
+              source={{ uri: track.trackImageURL }}
+              alt="image base"
+              borderRadius={8}
+              size="xs"
+              mr={4}
+            />
+            <VStack>
+              <Text bold>How Democrats Can Win</Text>
+              <Text color="gray.300">The Daily</Text>
+            </VStack>
+          </HStack>
+          <PlayButton track={track} />
+        </Pressable>
+      )}
       <HStack
         w="100%"
         bgColor="purple.900"

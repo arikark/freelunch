@@ -27,18 +27,9 @@ type EpisodeProps = {
   image: string
 }
 
-const episode: EpisodeProps = {
-  podcastTitle: 'The Daily',
-  episodeTitle: 'How Democrats Can Win',
-  description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. `,
-  dateCreated: '2022-11-09 00:00:00',
-  durationInSeconds: 7200,
-  secondsPlayed: 6023,
-  image: 'https://wallpaperaccess.com/full/317501.jpg',
-}
-
 export default function Player({
   navigation,
+  route,
 }: PodcastStackScreenProps<'Player'>) {
   const {
     onPlayPausePressed,
@@ -50,32 +41,29 @@ export default function Player({
     timeRemaining,
   } = usePlayback()
 
-  const audioURL =
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+  const { playbackInstance, isPlaying, track } = usePlaybackStore()
 
-  const { setTrackURL, playbackInstance, isPlaying } = usePlaybackStore()
-
-  return playbackInstance?.status.isLoaded ? (
+  return playbackInstance?.status.isLoaded && track ? (
     <Box h="100%" paddingX={3} safeAreaTop safeAreaX variant="layout">
       <VStack minH="90%" alignItems="center">
-        <HStack width="100%" alignItems="center" justifyContent="flex-start">
+        <HStack width="100%">
           <IconButton
             icon={<ChevronDownIcon as="Hide player page" />}
             onPress={() => navigation.goBack()}
             variant="ghost"
             colorScheme="white"
-            mr="15%"
+            mr={2}
           />
 
-          <Box alignItems="center">
+          <Box justifyContent="center">
             <Text>PLAYING FROM PODCAST</Text>
-            <Heading>{episode.podcastTitle}</Heading>
+            <Heading>{track.collectionName}</Heading>
           </Box>
         </HStack>
         <Image
           borderRadius={2}
           source={{
-            uri: episode.image,
+            uri: track.trackImageURL,
           }}
           alt="Alternate Text"
           size="2xl"
@@ -83,8 +71,8 @@ export default function Player({
           marginTop={15}
         />
         <Box marginTop={6}>
-          <Heading>{episode.episodeTitle}</Heading>
-          <Text>{episode.podcastTitle}</Text>
+          <Heading>{track.trackName}</Heading>
+          <Text>{track.collectionName}</Text>
         </Box>
         <VStack width="100%">
           <HStack width="100%" alignItems="center" justifyContent="center">
@@ -92,7 +80,11 @@ export default function Player({
               <AntDesign name="stepbackward" size={20} color="white" />
             </IconButton>
             <IconButton
-              onPress={() => onPlayPausePressed(audioURL)}
+              onPress={() =>
+                onPlayPausePressed({
+                  ...track,
+                })
+              }
               accessibilityLabel="Play"
               icon={
                 isPlaying ? (

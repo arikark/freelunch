@@ -6,7 +6,7 @@ import {
   InterruptionModeIOS,
 } from 'expo-av'
 
-import { usePlaybackStore } from './usePlaybackStore'
+import { Track, usePlaybackStore } from './usePlaybackStore'
 
 export const usePlayback = () => {
   const [shouldPlayAtEndOfSeek, setShouldPlayAtEndOfSeek] =
@@ -42,7 +42,7 @@ export const usePlayback = () => {
       playback.playbackInstance?.status.isLoaded
     ) {
       const currentTrackURL = playback.playbackInstance?.status.uri
-      if (currentTrackURL !== playback.trackURL) {
+      if (currentTrackURL !== playback.track?.trackURL) {
         await playback.playbackInstance?.sound.unloadAsync()
         playback.setPlaybackInstance(null)
       }
@@ -85,19 +85,21 @@ export const usePlayback = () => {
     // if (playback.trackURL) {
     //   loadNewPlaybackInstance(playback.isPlaying, playback.trackURL)
     // }
-  }, [playback.isPlaying, playback.trackURL])
+  }, [playback.isPlaying, playback.track])
 
-  const onPlayPausePressed = async (audioURL: string) => {
+  const onPlayPausePressed = async (track: Track) => {
+    playback.setTrack(track)
     if (playback.playbackInstance?.sound != null) {
       if (playback.isPlaying) {
         await playback.playbackInstance?.sound.pauseAsync()
         playback.setIsPlaying(false)
       } else {
         await playback.playbackInstance.sound.playAsync()
+        playback.setTrack(track)
         playback.setIsPlaying(true)
       }
     } else {
-      loadNewPlaybackInstance(true, audioURL).then(async () => {
+      loadNewPlaybackInstance(true, track.trackURL).then(async () => {
         await playback.playbackInstance?.sound.playAsync()
         playback.setIsPlaying(true)
       })

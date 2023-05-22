@@ -42,15 +42,14 @@ import { PodcastStackScreenProps } from '../types'
 //   },
 // ]
 
-export const episodesZ = z.array(
-  z.object({
-    _id: z.string(),
-    name: z.string(),
-    description: z.string(),
-    imageURL: z.string(),
-    audioURL: z.string(),
-  })
-)
+export const episodeZ = z.object({
+  _id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  imageURL: z.string(),
+  audioURL: z.string(),
+})
+export const episodesZ = z.array(episodeZ)
 
 export default function Episodes({
   navigation,
@@ -86,7 +85,7 @@ export default function Episodes({
         data={episodes}
         renderItem={({ item, index }) => (
           <EpisodeMenuItem
-            {...item}
+            {...{ ...item, podcastName: title }}
             mb={episodes && index === episodes.length - 1 ? '30%' : 0}
             onPress={() =>
               navigation.navigate('Episode', {
