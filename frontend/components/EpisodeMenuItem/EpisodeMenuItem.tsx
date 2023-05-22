@@ -14,19 +14,21 @@ import {
 } from 'native-base'
 
 export interface EpisodeMenuItemProps extends IPressableProps {
-  title: string
+  name: string
   description: string
-  image: string
-  dateCreated: string
-  durationInSeconds: number
+  imageURL: string
+  dateCreated?: string
+  durationInSeconds?: number
+  audioURL: string
 }
 
 export function EpisodeMenuItem({
-  title,
+  name,
   description,
-  image,
+  imageURL,
   dateCreated,
   durationInSeconds,
+  audioURL,
   ...props
 }: EpisodeMenuItemProps) {
   const formattedDuration = moment
@@ -59,14 +61,14 @@ export function EpisodeMenuItem({
               <Image
                 borderRadius={8}
                 source={{
-                  uri: image,
+                  uri: imageURL,
                 }}
                 alt="Alternate Text"
                 size="xs"
                 mr="12px"
               />
               <Text fontWeight="medium" fontSize="md" flex={1}>
-                {title}
+                {name}
               </Text>
             </HStack>
             <Text mt="2" fontSize="sm" numberOfLines={2} isTruncated>

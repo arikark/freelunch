@@ -33,15 +33,6 @@ export const podcastsZ = z.array(
     name: z.string(),
     description: z.string(),
     imageURL: z.string(),
-    episodes: z.array(
-      z.object({
-        audioURL: z.string(),
-        _createdAt: z.string(),
-        name: z.string(),
-        description: z.string(),
-        _id: z.string(),
-      })
-    ),
   })
 )
 
@@ -130,7 +121,7 @@ export default function Podcasts({
   const sections = [
     {
       data:
-        podcasts?.map(({ name, _id, description, imageURL, episodes }) => ({
+        podcasts?.map(({ name, _id, description, imageURL }) => ({
           title: name,
           id: _id,
           description,

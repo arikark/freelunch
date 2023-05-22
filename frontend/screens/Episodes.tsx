@@ -1,7 +1,16 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react'
-import { ArrowBackIcon, Heading, HStack, IconButton } from 'native-base'
+import {
+  ArrowBackIcon,
+  Divider,
+  FlatList,
+  Heading,
+  HStack,
+  IconButton,
+} from 'native-base'
 import { z } from 'zod'
 
+import { EpisodeMenuItem } from '../components/EpisodeMenuItem'
 import { Layout } from '../components/Layout'
 import { useGetContent } from '../hooks/useGetContent'
 import { PodcastStackScreenProps } from '../types'
@@ -33,23 +42,13 @@ import { PodcastStackScreenProps } from '../types'
 //   },
 // ]
 
-const query = `*[_type == "episode"]{
-
-}
-`
 export const episodesZ = z.array(
   z.object({
+    _id: z.string(),
     name: z.string(),
     description: z.string(),
     imageURL: z.string(),
-    episodes: z.array(
-      z.object({
-        audioURL: z.string(),
-        _createdAt: z.string(),
-        name: z.string(),
-        description: z.string(),
-      })
-    ),
+    audioURL: z.string(),
   })
 )
 
@@ -58,6 +57,15 @@ export default function Episodes({
   route,
 }: PodcastStackScreenProps<'Episodes'>) {
   const { title, podcastId } = route.params
+
+  const query = `*[_type == "episode" && references("${podcastId}", "podcast") ]{
+  name,
+  _id,
+  description,
+  "imageURL": image.asset->url,
+  "audioURL": audio.asset->url,
+}
+`
   const {
     isLoading,
     error,
@@ -74,24 +82,24 @@ export default function Episodes({
         />
         <Heading>{title}</Heading>
       </HStack>
-      {/* <FlatList
+      <FlatList
         data={episodes}
         renderItem={({ item, index }) => (
           <EpisodeMenuItem
             {...item}
-            mb={index === episodes.length - 1 ? '30%' : 0}
+            mb={episodes && index === episodes.length - 1 ? '30%' : 0}
             onPress={() =>
               navigation.navigate('Episode', {
-                title: item.title,
-                id: ,
+                title: item.name,
+                episodeId: item._id,
               })
             }
           />
         )}
         ItemSeparatorComponent={() => <Divider />}
         showsVerticalScrollIndicator={false}
-        keyExtractor={(item, index) => item.title.toString()}
-      /> */}
+        keyExtractor={(item, index) => item._id.toString()}
+      />
     </Layout>
   )
 }

@@ -16,6 +16,7 @@ export const useGetContent = <T extends ZodType>(
     )(groqQuery)
       // validate the data
       .then((result) => {
+        console.log(result)
         return zodType.parse(result.data)
       })
       .catch((error) => {
