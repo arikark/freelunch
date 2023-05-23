@@ -84,6 +84,7 @@ export function EpisodeMenuItem({
               </Text>
               <Box minH="40px" justifyContent="center" alignItems="center">
                 <PlayButton
+                  variant="icon"
                   track={{
                     trackURL: audioURL,
                     trackName: name,

@@ -72,7 +72,6 @@ export const usePlaybackStore = create<Playback>((set, get) => ({
   setIsLoading: (isLoading: boolean) => {
     set({ isLoading })
   },
-
   track: null,
   setTrack: (track: Track) => set({ track }),
 }))

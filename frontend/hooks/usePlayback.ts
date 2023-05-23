@@ -23,7 +23,7 @@ export const usePlayback = () => {
     // if (playback.trackURL) {
     //   loadNewPlaybackInstance(playback.isPlaying, playback.trackURL)
     // }
-  }, [playback.track])
+  }, [playback])
   const [shouldPlayAtEndOfSeek, setShouldPlayAtEndOfSeek] =
     useState<boolean>(false)
 
@@ -89,6 +89,7 @@ export const usePlayback = () => {
       playback.setIsLoading(true)
       console.log('loading new track', track)
       await loadNewPlaybackInstance(true, track.trackURL)
+      playback.setTrack(track)
       //
     }
     playback.setIsLoading(false)

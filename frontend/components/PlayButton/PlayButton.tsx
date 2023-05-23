@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import { AntDesign } from '@expo/vector-icons'
-import { Button, IconButton, Spinner } from 'native-base'
+import { Button, Spinner } from 'native-base'
 
 import { usePlayback } from '../../hooks/usePlayback'
 import { Track, usePlaybackStore } from '../../hooks/usePlaybackStore'
@@ -13,7 +14,7 @@ const Icon = ({
   isTrackLoaded: boolean
   isPaused: boolean
 }) => {
-  if (isLoading) {
+  if (isLoading && !isTrackLoaded) {
     return <Spinner size="sm" color="white" />
   }
   return !isPaused && isTrackLoaded ? (
@@ -30,7 +31,7 @@ export function PlayButton({
   track: Track
   variant?: 'icon' | 'button'
 }) {
-  // const [isLoading, setIsLoading] = useState(false)
+  const [selectedTrack, setSelectedTrack] = useState<Track | null>(null)
 
   const { playbackInstance, isPaused, loadedSoundURL, isLoading } =
     usePlaybackStore()
@@ -41,28 +42,24 @@ export function PlayButton({
     onPlayPausePressed(track)
   }
 
-  return variant === 'button' ? (
+  // check if the specific button was clicked
+
+  return (
     <Button
+      variant={variant === 'icon' ? 'ghost' : 'solid'}
+      onFocus={() => console.log('hi', track.trackName)}
+      accessibilityLabel={track.trackURL}
       colorScheme="blue"
       rounded="2xl"
       onPress={onPress}
       isLoading={isLoading}
-    >
-      {isPaused ? 'Play' : 'Pause'}
-    </Button>
-  ) : (
-    <IconButton
-      accessibilityLabel="Play"
-      icon={
-        <Icon
-          isLoading={isLoading}
-          isTrackLoaded={isTrackLoaded}
-          isPaused={isPaused}
-        />
+      leftIcon={
+        !isPaused && isTrackLoaded ? (
+          <AntDesign name="pausecircle" size={18} color="white" />
+        ) : (
+          <AntDesign name="play" size={18} color="white" />
+        )
       }
-      size="md"
-      _pressed={{ bg: 'coolGray.500' }}
-      onPress={onPress}
     />
   )
 }
