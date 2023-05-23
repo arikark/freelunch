@@ -49,6 +49,7 @@ const episodeZ = z.object({
   imageURL: z.string(),
   audioURL: z.string(),
   durationInSeconds: z.number(),
+  dateCreated: z.string(),
 })
 
 export const episodesZ = z.object({
@@ -66,13 +67,14 @@ export default function Episodes({
   const query = `*[_type == "podcast" && _id == "${podcastId}"][0]{
     name,
     _id,
-    "episodes": *[_type == "episode" && references(^._id, "episode") ]{
+    "episodes": *[_type == "episode" && references(^._id, "episode") ]| order(_createdAt desc){
       name,
       _id,
       description,
       "imageURL": image.asset->url,
       "audioURL": audio.asset->url,
       durationInSeconds,
+      "dateCreated": _createdAt
     }
   }
 `

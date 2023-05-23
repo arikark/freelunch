@@ -27,6 +27,7 @@ export const detailedEpisodeZ = z.object({
   imageURL: z.string(),
   audioURL: z.string(),
   durationInSeconds: z.number(),
+  createdAt: z.string(),
   podcast: z.object({
     name: z.string(),
     _id: z.string(),
@@ -45,6 +46,7 @@ export default function Episode({
     "imageURL": image.asset->url,
     "audioURL": audio.asset->url,
     durationInSeconds,
+    "createdAt": _createdAt,
     "podcast": *[_type == 'podcast' && references(^._id)][0]{name, _id}
   }
 `
@@ -59,7 +61,7 @@ export default function Episode({
   )
   const [isFullDescription, setIsFullDescription] = useState(false)
 
-  const formattedDate = moment(episode?.durationInSeconds).fromNow()
+  const formattedDate = moment(episode?.createdAt).fromNow()
   // Format time as 1 hour and 20 minutes left
   const timeRemaining = episode
     ? moment
@@ -86,10 +88,13 @@ export default function Episode({
         />
       </HStack>
       {episode && (
-        <VStack h="78%" justifyContent="space-between" pb={20}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+        <VStack h="78%">
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            scrollEnabled={isFullDescription}
+          >
             <VStack justifyContent="space-between">
-              <VStack minH="250px" justifyContent="space-between">
+              <VStack minH="250px" justifyContent="space-evenly">
                 <Box>
                   <Image
                     borderRadius={8}

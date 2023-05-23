@@ -18,8 +18,8 @@ export interface EpisodeMenuItemProps extends IPressableProps {
   name: string
   description: string
   imageURL: string
-  dateCreated?: string
-  durationInSeconds?: number
+  dateCreated: string
+  durationInSeconds: number
   audioURL: string
   _id: string
   podcastName: string

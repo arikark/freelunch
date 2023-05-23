@@ -1,5 +1,5 @@
 import React from 'react'
-import { Heading, SectionList, useColorMode } from 'native-base'
+import { Heading, SectionList } from 'native-base'
 import { z } from 'zod'
 
 import { Layout } from '../components/Layout'
@@ -12,13 +12,8 @@ const query = `*[_type == "podcast"]{
   _id,
   description,
   "imageURL": image.asset->url,
-  episodes[]->{
-    "audioURL": audio.asset->url,
-    _createdAt,
-    name,
-    description,
-    _id,
-  },
+  "latestEpisodeDurationInSeconds": *[_type == "episode" && references(^._id, "episode") ] | order(_createdAt desc)[0].durationInSeconds,
+  "latestEpisodeDateCreated": *[_type == "episode" && references(^._id, "episode") ] | order(_createdAt desc)[0]._createdAt,
 }
 `
 export const podcastsZ = z.array(
@@ -27,6 +22,8 @@ export const podcastsZ = z.array(
     name: z.string(),
     description: z.string(),
     imageURL: z.string(),
+    latestEpisodeDurationInSeconds: z.number(),
+    latestEpisodeDateCreated: z.string(),
   })
 )
 
@@ -109,21 +106,29 @@ export default function Podcasts({
     error,
     data: podcasts,
   } = useGetContent<typeof podcastsZ>('podcasts', podcastsZ, query)
-  const { toggleColorMode } = useColorMode()
 
   // convert PodcastsZ data to the format that SectionList expects
   const sections = [
     {
       data:
-        podcasts?.map(({ name, _id, description, imageURL }) => ({
-          title: name,
-          id: _id,
-          description,
-          image: imageURL,
-          category: 'News',
-          latestEpisodeDurationInSeconds: 820,
-          latestEpisodeDateCreated: '2020-01-01',
-        })) ?? [],
+        podcasts?.map(
+          ({
+            name,
+            _id,
+            description,
+            imageURL,
+            latestEpisodeDurationInSeconds,
+            latestEpisodeDateCreated,
+          }) => ({
+            title: name,
+            id: _id,
+            description,
+            image: imageURL,
+            category: 'News',
+            latestEpisodeDurationInSeconds,
+            latestEpisodeDateCreated,
+          })
+        ) ?? [],
     },
   ]
 

@@ -10,6 +10,6 @@ export function onAppStateChange(status: AppStateStatus) {
 
 export const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { retry: 2 },
+    queries: { retry: 2, refetchInterval: 1000 * 60 * 5 },
   },
 })
