@@ -12,7 +12,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 export type PodcastStackParamList = {
   Podcasts: undefined
-  Episodes: { title: string; podcastId: string }
+  Episodes: { podcastId: string }
   Player: undefined
   Episode: { title: string; episodeId: string }
 }

@@ -7,6 +7,7 @@ import {
   Heading,
   HStack,
   IconButton,
+  Text,
 } from 'native-base'
 import { z } from 'zod'
 
@@ -82,8 +83,12 @@ export default function Episodes({
     data: podcast,
   } = useGetContent<typeof episodesZ>(`podcast ${podcastId}`, episodesZ, query)
 
-  return (
-    podcast && (
+  if (error) {
+    return <Text>{JSON.stringify(error, null, 2)}</Text>
+  }
+
+  if (podcast) {
+    return (
       <Layout>
         <HStack alignItems="center">
           <IconButton
@@ -117,5 +122,6 @@ export default function Episodes({
         />
       </Layout>
     )
-  )
+  }
+  return <Text>Loading...</Text>
 }

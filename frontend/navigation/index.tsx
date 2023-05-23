@@ -12,7 +12,15 @@ import {
 } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Box, HStack, Image, Pressable, Text, VStack } from 'native-base'
+import {
+  Box,
+  HStack,
+  Image,
+  PresenceTransition,
+  Pressable,
+  Text,
+  VStack,
+} from 'native-base'
 
 import { PlayButton } from '../components/PlayButton/PlayButton'
 import { usePlaybackStore } from '../hooks/usePlaybackStore'
@@ -106,37 +114,52 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { track } = usePlaybackStore()
+
   return (
+    // make player bar slide up from bottom
     <>
-      {track && (
-        <Pressable
-          w="100%"
-          bgColor="gray.800"
-          onPress={() => navigation.navigate('Player')}
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="space-between"
-          py={1}
-          px={4}
-          position="absolute"
-          bottom={70}
-        >
-          <HStack justifyContent="space-between">
-            <Image
-              source={{ uri: track.trackImageURL }}
-              alt="image base"
-              borderRadius={8}
-              size="xs"
-              mr={4}
-            />
-            <VStack>
-              <Text bold>How Democrats Can Win</Text>
-              <Text color="gray.300">The Daily</Text>
-            </VStack>
-          </HStack>
-          <PlayButton track={track} />
-        </Pressable>
-      )}
+      <PresenceTransition
+        visible={!!track}
+        initial={{
+          scaleY: 0,
+        }}
+        animate={{
+          scaleY: 1,
+          transition: {
+            duration: 350,
+          },
+        }}
+      >
+        {track && (
+          <Pressable
+            w="100%"
+            bgColor="gray.800"
+            onPress={() => navigation.navigate('Player')}
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
+            py={1}
+            px={4}
+            position="absolute"
+            bottom={70}
+          >
+            <HStack justifyContent="space-between">
+              <Image
+                source={{ uri: track.trackImageURL }}
+                alt="image base"
+                borderRadius={8}
+                size="xs"
+                mr={4}
+              />
+              <VStack>
+                <Text bold>How Democrats Can Win</Text>
+                <Text color="gray.300">The Daily</Text>
+              </VStack>
+            </HStack>
+            <PlayButton track={track} />
+          </Pressable>
+        )}
+      </PresenceTransition>
       <HStack
         w="100%"
         bgColor="purple.900"
