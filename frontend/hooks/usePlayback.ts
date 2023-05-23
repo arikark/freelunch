@@ -24,6 +24,9 @@ export const usePlayback = () => {
       playback.setMuted(status.isMuted)
       playback.setVolume(status.volume)
       playback.setShouldCorrectPitch(status.shouldCorrectPitch)
+      playback.setIsPaused(!status.isPlaying)
+      playback.setIsPlaying(status.isPlaying)
+      playback.setLoadedSoundURL(status.uri)
     } else if (status.error) {
       console.log(`FATAL PLAYER ERROR: ${status.error}`)
     }
@@ -36,40 +39,31 @@ export const usePlayback = () => {
     // check if the song that is being played is the same as the one that is being requested
     // if so, do nothing
     // if not, unload the current song and load the new one
-    if (
-      playback.playbackInstance?.sound !== null &&
-      audioURL !== null &&
-      playback.playbackInstance?.status.isLoaded
-    ) {
-      const currentTrackURL = playback.playbackInstance?.status.uri
-      if (currentTrackURL !== playback.track?.trackURL) {
-        await playback.playbackInstance?.sound.unloadAsync()
-        playback.setPlaybackInstance(null)
-      }
+    if (playback.playbackInstance?.sound) {
+      console.log('unloading current playback instance')
+      await playback.playbackInstance?.sound.unloadAsync()
+      playback.setPlaybackInstance(null)
     }
-
     // if (playback.playbackInstance?.sound !== null) {
     //   await playback.playbackInstance?.sound.unloadAsync()
     //   playback.setPlaybackInstance(null)
     // }
 
-    if (!playback.playbackInstance?.sound) {
-      console.log('loading new playback instance')
-      const source = {
-        uri: audioURL,
-      }
-      const initialStatus = {
-        shouldPlay: playing,
-        shouldCorrectPitch: playback.shouldCorrectPitch,
-      }
-
-      const playbackInstance = await Audio.Sound.createAsync(
-        source,
-        initialStatus,
-        onPlaybackStatusUpdate
-      )
-      playback.setPlaybackInstance(playbackInstance)
+    console.log('loading new playback instance')
+    const source = {
+      uri: audioURL,
     }
+    const initialStatus = {
+      shouldPlay: playing,
+      shouldCorrectPitch: playback.shouldCorrectPitch,
+    }
+
+    const playbackInstance = await Audio.Sound.createAsync(
+      source,
+      initialStatus,
+      onPlaybackStatusUpdate
+    )
+    playback.setPlaybackInstance(playbackInstance)
   }
 
   useEffect(() => {
@@ -85,31 +79,29 @@ export const usePlayback = () => {
     // if (playback.trackURL) {
     //   loadNewPlaybackInstance(playback.isPlaying, playback.trackURL)
     // }
-  }, [playback.isPlaying, playback.track])
+  }, [playback.track])
 
   const onPlayPausePressed = async (track: Track) => {
-    playback.setTrack(track)
-    if (playback.playbackInstance?.sound != null) {
-      if (playback.isPlaying) {
-        await playback.playbackInstance?.sound.pauseAsync()
-        playback.setIsPlaying(false)
-      } else {
+    const sameTrack = playback.loadedSoundURL === track.trackURL
+    if (sameTrack && playback.playbackInstance) {
+      if (playback.isPaused) {
         await playback.playbackInstance.sound.playAsync()
-        playback.setTrack(track)
-        playback.setIsPlaying(true)
+      } else {
+        await playback.playbackInstance.sound.pauseAsync()
       }
     } else {
-      loadNewPlaybackInstance(true, track.trackURL).then(async () => {
+      console.log('loading new track', track)
+      await loadNewPlaybackInstance(true, track.trackURL).then(async () => {
         await playback.playbackInstance?.sound.playAsync()
-        playback.setIsPlaying(true)
       })
+      //
     }
   }
 
   const onSliderValueChange = () => {
     if (playback.playbackInstance?.sound != null && !isSeeking) {
       setIsSeeking(true)
-      setShouldPlayAtEndOfSeek(playback.isPlaying)
+      setShouldPlayAtEndOfSeek(!playback.isPaused)
       playback.playbackInstance?.sound.pauseAsync()
     }
   }

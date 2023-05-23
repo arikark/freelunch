@@ -7,20 +7,23 @@ import { Track, usePlaybackStore } from '../../hooks/usePlaybackStore'
 
 const Icon = ({
   isLoading,
+  isTrackLoaded,
   isPlaying,
 }: {
   isLoading: boolean
+  isTrackLoaded: boolean
   isPlaying: boolean
 }) => {
   if (isLoading) {
     return <Spinner size="sm" color="white" />
   }
-  return isPlaying ? (
+  return isPlaying && isTrackLoaded ? (
     <AntDesign name="pausecircle" size={18} color="white" />
   ) : (
     <AntDesign name="play" size={18} color="white" />
   )
 }
+
 export function PlayButton({
   track,
   variant,
@@ -30,9 +33,11 @@ export function PlayButton({
 }) {
   const [isLoading, setIsLoading] = useState(false)
 
-  const { isPlaying, playbackInstance } = usePlaybackStore()
+  const { playbackInstance, isPaused, isPlaying, loadedSoundURL } =
+    usePlaybackStore()
   const { onPlayPausePressed } = usePlayback()
   const isLoaded = playbackInstance?.status.isLoaded
+  const isTrackLoaded = loadedSoundURL === track.trackURL
 
   useEffect(() => {
     if (isLoaded) {
@@ -54,12 +59,18 @@ export function PlayButton({
       onPress={onPress}
       isLoading={isLoading}
     >
-      {isPlaying ? 'Pause' : 'Play'}
+      {isPlaying ? 'Play' : 'Pause'}
     </Button>
   ) : (
     <IconButton
       accessibilityLabel="Play"
-      icon={<Icon isLoading={isLoading} isPlaying={isPlaying} />}
+      icon={
+        <Icon
+          isLoading={isLoading}
+          isTrackLoaded={isTrackLoaded}
+          isPlaying={isPlaying}
+        />
+      }
       size="md"
       _pressed={{ bg: 'coolGray.500' }}
       onPress={onPress}

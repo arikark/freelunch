@@ -24,12 +24,16 @@ interface Playback {
   setShouldPlay: (shouldPlay: boolean) => void
   setShouldCorrectPitch: (shouldCorrectPitch: boolean) => void
   setVolume: (volume: number) => void
-  isPlaying: boolean
-  setIsPlaying: (isPlaying: boolean) => void
   setIsBuffering: (isBuffering: boolean) => void
   isBuffering: boolean
   track: Track | null
   setTrack: (track: Track) => void
+  isPaused: boolean
+  setIsPaused: (isPaused: boolean) => void
+  isPlaying: boolean
+  setIsPlaying: (isPlaying: boolean) => void
+  loadedSoundURL: string | null
+  setLoadedSoundURL: (url: string) => void
 }
 
 export const usePlaybackStore = create<Playback>((set, get) => ({
@@ -44,6 +48,8 @@ export const usePlaybackStore = create<Playback>((set, get) => ({
   shouldCorrectPitch: false,
   volume: 1.0,
   setIsBuffering: (isBuffering: boolean) => set({ isBuffering }),
+  isPaused: false,
+  setIsPaused: (isPaused: boolean) => set({ isPaused }),
   setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
   setMuted: (muted: boolean) => set({ muted }),
   setPlaybackInstancePosition: (playbackInstancePosition: number) =>
@@ -57,6 +63,11 @@ export const usePlaybackStore = create<Playback>((set, get) => ({
   setPlaybackInstance: (playbackInstance: Audio.SoundObject | null) => {
     set({ playbackInstance })
   },
+  loadedSoundURL: null,
+  setLoadedSoundURL: (loadedSoundURL: string) => {
+    set({ loadedSoundURL })
+  },
+
   track: null,
   setTrack: (track: Track) => set({ track }),
 }))
