@@ -54,11 +54,9 @@ export const usePlayback = () => {
     // if so, do nothing
     // if not, unload the current song and load the new one
     if (playback.playbackInstance?.sound) {
-      console.log('unloading current playback instance')
       await playback.playbackInstance?.sound.unloadAsync()
     }
 
-    console.log('loading new playback instance')
     const source = {
       uri: audioURL,
     }
@@ -87,7 +85,6 @@ export const usePlayback = () => {
       }
     } else {
       playback.setIsLoading(true)
-      console.log('loading new track', track)
       await loadNewPlaybackInstance(true, track.trackURL)
       playback.setTrack(track)
       //
