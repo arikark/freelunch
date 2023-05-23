@@ -114,10 +114,8 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { track, isLoading } = usePlaybackStore()
-  // console.log('track', track)
 
   return (
-    // make player bar slide up from bottom
     <>
       <PresenceTransition
         visible={!!track && !isLoading}
