@@ -1,14 +1,9 @@
 import React from 'react'
-import {
-  Center,
-  Heading,
-  SectionList,
-  Spinner,
-  useColorMode,
-} from 'native-base'
+import { Heading, SectionList, useColorMode } from 'native-base'
 import { z } from 'zod'
 
 import { Layout } from '../components/Layout'
+import { LoadingScreen } from '../components/LoadingScreen'
 import { PodcastMenuItem } from '../components/PodcastMenuItem'
 import { useGetContent } from '../hooks/useGetContent'
 import { PodcastStackScreenProps } from '../types'
@@ -134,13 +129,7 @@ export default function Podcasts({
   ]
 
   if (isLoading) {
-    return (
-      <Layout>
-        <Center h="100%" bg="pink">
-          <Spinner accessibilityLabel="Loading podcasts" color="blue.500" />
-        </Center>
-      </Layout>
-    )
+    return <LoadingScreen />
   }
 
   return (

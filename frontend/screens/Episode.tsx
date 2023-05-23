@@ -1,21 +1,23 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 import {
-  ArrowBackIcon,
   Box,
-  Button,
+  ChevronLeftIcon,
   ChevronRightIcon,
   Heading,
   HStack,
   IconButton,
   Image,
   Pressable,
+  ScrollView,
   Text,
   VStack,
 } from 'native-base'
 import { z } from 'zod'
 
 import { Layout } from '../components/Layout'
+import { LoadingScreen } from '../components/LoadingScreen'
+import { PlayButton } from '../components/PlayButton'
 import { useGetContent } from '../hooks/useGetContent'
 import { PodcastStackScreenProps } from '../types'
 
@@ -59,7 +61,7 @@ export default function Episode({
   const [isFullDescription, setIsFullDescription] = useState(false)
 
   if (isLoading) {
-    return <Text>Loading...</Text>
+    return <LoadingScreen />
   }
 
   if (episode) {
@@ -78,60 +80,68 @@ export default function Episode({
 
     return (
       <Layout>
-        <HStack alignItems="center">
+        <HStack alignItems="center" mb={8}>
           <IconButton
-            icon={<ArrowBackIcon />}
+            p={0}
+            size="lg"
+            accessibilityLabel="Go back"
+            icon={<ChevronLeftIcon />}
             onPress={() => navigation.goBack()}
-            mr={4}
           />
         </HStack>
-        <VStack minH="50%" justifyContent="space-between">
-          <Box minH="17%" justifyContent="space-between">
-            <Image
-              borderRadius={8}
-              source={{
-                uri: episode.imageURL,
-              }}
-              alt="Alternate Text"
-              size="sm"
-              mr="12px"
-            />
-            <Heading color="white">{title}</Heading>
-          </Box>
-          <Box>
-            <Text fontWeight="bold">{episode.podcast.name}</Text>
-            <Text
-              fontSize={10}
-            >{`${formattedDate} • ${timeRemaining} left`}</Text>
-          </Box>
-          <Box>
-            <Button
-              colorScheme="blue"
-              rounded="2xl"
-              width="88px"
-              marginTop={3}
-              onPress={() => navigation.navigate('Player')}
-            >
-              Play
-            </Button>
-          </Box>
-          <Box>
-            <Text>
-              {description}
-              {isFullDescription || !isLongDescription ? null : (
-                <Pressable onPress={() => setIsFullDescription(true)}>
-                  <Text bold color="white">
-                    see more
-                  </Text>
-                </Pressable>
-              )}
-            </Text>
-          </Box>
-
+        <VStack h="78%" justifyContent="space-between">
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <VStack justifyContent="space-between">
+              <VStack minH="200px" justifyContent="space-between">
+                <Box>
+                  <Image
+                    borderRadius={8}
+                    source={{
+                      uri: episode.imageURL,
+                    }}
+                    alt={`${episode.name} image`}
+                    size="md"
+                  />
+                  <Heading color="white">{title}</Heading>
+                </Box>
+                <Box>
+                  <Text fontWeight="bold">{episode.podcast.name}</Text>
+                  <Text
+                    fontSize={10}
+                  >{`${formattedDate} • ${timeRemaining} left`}</Text>
+                </Box>
+                <Box width="88px" minH="50px" justifyContent="center">
+                  <PlayButton
+                    variant="button"
+                    track={{
+                      trackId: episode._id,
+                      trackImageURL: episode.imageURL,
+                      trackName: episode.name,
+                      collectionName: episode.podcast.name,
+                      trackURL: episode.audioURL,
+                    }}
+                  />
+                </Box>
+              </VStack>
+              <Box>
+                <Text mb={3}>{description}</Text>
+                <Text>
+                  {!isLongDescription ? null : (
+                    <Pressable
+                      onPress={() => setIsFullDescription(!isFullDescription)}
+                    >
+                      <Text bold color="white">
+                        {isFullDescription ? 'Show less' : 'Show more'}
+                      </Text>
+                    </Pressable>
+                  )}
+                </Text>
+              </Box>
+            </VStack>
+          </ScrollView>
           <Pressable
             onPress={() =>
               navigation.navigate('Episodes', {
-                title: episode.podcast.name,
                 podcastId: episode.podcast._id,
               })
             }

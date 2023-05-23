@@ -3,6 +3,7 @@ import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
 import {
+  Box,
   HStack,
   Image,
   IPressableProps,
@@ -81,15 +82,17 @@ export function EpisodeMenuItem({
               <Text fontSize={10}>
                 {`${formattedDate} • ${formattedDuration}`}
               </Text>
-              <PlayButton
-                track={{
-                  trackURL: audioURL,
-                  trackName: name,
-                  trackId: audioId,
-                  trackImageURL: imageURL,
-                  collectionName: podcastName,
-                }}
-              />
+              <Box minH="40px" justifyContent="center" alignItems="center">
+                <PlayButton
+                  track={{
+                    trackURL: audioURL,
+                    trackName: name,
+                    trackId: audioId,
+                    trackImageURL: imageURL,
+                    collectionName: podcastName,
+                  }}
+                />
+              </Box>
             </HStack>
           </VStack>
         )

@@ -126,7 +126,7 @@ function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
         animate={{
           scaleY: 1,
           transition: {
-            duration: 350,
+            duration: 450,
           },
         }}
       >
@@ -138,10 +138,10 @@ function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
             flexDirection="row"
             alignItems="center"
             justifyContent="space-between"
-            py={1}
+            py={3}
             px={4}
             position="absolute"
-            bottom={70}
+            bottom={71}
           >
             <HStack justifyContent="space-between">
               <Image
@@ -165,7 +165,8 @@ function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
         bgColor="purple.900"
         position="absolute"
         bottom={0}
-        py={2}
+        paddingTop={2}
+        paddingBottom={4}
         opacity="0.9"
         justifyContent="space-evenly"
       >

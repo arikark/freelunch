@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react'
 import {
-  ArrowBackIcon,
+  ChevronLeftIcon,
   Divider,
   FlatList,
   Heading,
@@ -13,6 +13,7 @@ import { z } from 'zod'
 
 import { EpisodeMenuItem } from '../components/EpisodeMenuItem'
 import { Layout } from '../components/Layout'
+import { LoadingScreen } from '../components/LoadingScreen'
 import { useGetContent } from '../hooks/useGetContent'
 import { PodcastStackScreenProps } from '../types'
 
@@ -83,6 +84,10 @@ export default function Episodes({
     data: podcast,
   } = useGetContent<typeof episodesZ>(`podcast ${podcastId}`, episodesZ, query)
 
+  if (isLoading) {
+    return <LoadingScreen />
+  }
+
   if (error) {
     return <Text>{JSON.stringify(error, null, 2)}</Text>
   }
@@ -92,9 +97,10 @@ export default function Episodes({
       <Layout>
         <HStack alignItems="center">
           <IconButton
-            icon={<ArrowBackIcon />}
+            icon={<ChevronLeftIcon />}
             onPress={() => navigation.goBack()}
             mr={4}
+            accessibilityLabel="Go back"
           />
           <Heading>{podcast?.name}</Heading>
         </HStack>
