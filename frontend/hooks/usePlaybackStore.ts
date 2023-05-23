@@ -34,6 +34,8 @@ interface Playback {
   setIsPlaying: (isPlaying: boolean) => void
   loadedSoundURL: string | null
   setLoadedSoundURL: (url: string) => void
+  setIsLoading: (isLoading: boolean) => void
+  isLoading: boolean
 }
 
 export const usePlaybackStore = create<Playback>((set, get) => ({
@@ -66,6 +68,9 @@ export const usePlaybackStore = create<Playback>((set, get) => ({
   loadedSoundURL: null,
   setLoadedSoundURL: (loadedSoundURL: string) => {
     set({ loadedSoundURL })
+  },
+  setIsLoading: (isLoading: boolean) => {
+    set({ isLoading })
   },
 
   track: null,

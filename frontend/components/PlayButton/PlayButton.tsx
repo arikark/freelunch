@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons'
 import { Button, IconButton, Spinner } from 'native-base'
 
@@ -8,16 +7,16 @@ import { Track, usePlaybackStore } from '../../hooks/usePlaybackStore'
 const Icon = ({
   isLoading,
   isTrackLoaded,
-  isPlaying,
+  isPaused,
 }: {
   isLoading: boolean
   isTrackLoaded: boolean
-  isPlaying: boolean
+  isPaused: boolean
 }) => {
   if (isLoading) {
     return <Spinner size="sm" color="white" />
   }
-  return isPlaying && isTrackLoaded ? (
+  return !isPaused && isTrackLoaded ? (
     <AntDesign name="pausecircle" size={18} color="white" />
   ) : (
     <AntDesign name="play" size={18} color="white" />
@@ -31,24 +30,14 @@ export function PlayButton({
   track: Track
   variant?: 'icon' | 'button'
 }) {
-  const [isLoading, setIsLoading] = useState(false)
+  // const [isLoading, setIsLoading] = useState(false)
 
-  const { playbackInstance, isPaused, isPlaying, loadedSoundURL } =
+  const { playbackInstance, isPaused, loadedSoundURL, isLoading } =
     usePlaybackStore()
   const { onPlayPausePressed } = usePlayback()
-  const isLoaded = playbackInstance?.status.isLoaded
   const isTrackLoaded = loadedSoundURL === track.trackURL
 
-  useEffect(() => {
-    if (isLoaded) {
-      setIsLoading(false)
-    }
-  }, [isLoaded])
-
   const onPress = () => {
-    if (!isLoaded) {
-      setIsLoading(true)
-    }
     onPlayPausePressed(track)
   }
 
@@ -59,7 +48,7 @@ export function PlayButton({
       onPress={onPress}
       isLoading={isLoading}
     >
-      {isPlaying ? 'Play' : 'Pause'}
+      {isPaused ? 'Play' : 'Pause'}
     </Button>
   ) : (
     <IconButton
@@ -68,7 +57,7 @@ export function PlayButton({
         <Icon
           isLoading={isLoading}
           isTrackLoaded={isTrackLoaded}
-          isPlaying={isPlaying}
+          isPaused={isPaused}
         />
       }
       size="md"

@@ -9,11 +9,25 @@ import {
 import { Track, usePlaybackStore } from './usePlaybackStore'
 
 export const usePlayback = () => {
+  const playback = usePlaybackStore()
+  useEffect(() => {
+    Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      staysActiveInBackground: true,
+      interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+      playsInSilentModeIOS: true,
+      shouldDuckAndroid: true,
+      interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+      playThroughEarpieceAndroid: false,
+    })
+    // if (playback.trackURL) {
+    //   loadNewPlaybackInstance(playback.isPlaying, playback.trackURL)
+    // }
+  }, [playback.track])
   const [shouldPlayAtEndOfSeek, setShouldPlayAtEndOfSeek] =
     useState<boolean>(false)
 
   const [isSeeking, setIsSeeking] = useState<boolean>(false)
-  const playback = usePlaybackStore()
 
   const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
     if (status.isLoaded) {
@@ -42,12 +56,7 @@ export const usePlayback = () => {
     if (playback.playbackInstance?.sound) {
       console.log('unloading current playback instance')
       await playback.playbackInstance?.sound.unloadAsync()
-      playback.setPlaybackInstance(null)
     }
-    // if (playback.playbackInstance?.sound !== null) {
-    //   await playback.playbackInstance?.sound.unloadAsync()
-    //   playback.setPlaybackInstance(null)
-    // }
 
     console.log('loading new playback instance')
     const source = {
@@ -58,28 +67,15 @@ export const usePlayback = () => {
       shouldCorrectPitch: playback.shouldCorrectPitch,
     }
 
-    const playbackInstance = await Audio.Sound.createAsync(
+    await Audio.Sound.createAsync(
       source,
       initialStatus,
       onPlaybackStatusUpdate
-    )
-    playback.setPlaybackInstance(playbackInstance)
-  }
-
-  useEffect(() => {
-    Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      staysActiveInBackground: true,
-      interruptionModeIOS: InterruptionModeIOS.DoNotMix,
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
-      interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
-      playThroughEarpieceAndroid: false,
+    ).then((instance) => {
+      instance.sound.playAsync()
+      playback.setPlaybackInstance(instance)
     })
-    // if (playback.trackURL) {
-    //   loadNewPlaybackInstance(playback.isPlaying, playback.trackURL)
-    // }
-  }, [playback.track])
+  }
 
   const onPlayPausePressed = async (track: Track) => {
     const sameTrack = playback.loadedSoundURL === track.trackURL
@@ -90,12 +86,12 @@ export const usePlayback = () => {
         await playback.playbackInstance.sound.pauseAsync()
       }
     } else {
+      playback.setIsLoading(true)
       console.log('loading new track', track)
-      await loadNewPlaybackInstance(true, track.trackURL).then(async () => {
-        await playback.playbackInstance?.sound.playAsync()
-      })
+      await loadNewPlaybackInstance(true, track.trackURL)
       //
     }
+    playback.setIsLoading(false)
   }
 
   const onSliderValueChange = () => {
