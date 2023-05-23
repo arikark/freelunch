@@ -113,14 +113,14 @@ function TabBarIcon(props: {
 const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
-  const { track } = usePlaybackStore()
+  const { track, isLoading } = usePlaybackStore()
   // console.log('track', track)
 
   return (
     // make player bar slide up from bottom
     <>
       <PresenceTransition
-        visible={!!track}
+        visible={!!track && !isLoading}
         initial={{
           scaleY: 0,
         }}
@@ -157,7 +157,7 @@ function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
                 <Text color="gray.300">The Daily</Text>
               </VStack>
             </HStack>
-            <PlayButton track={track} />
+            <PlayButton track={track} variant="icon" />
           </Pressable>
         )}
       </PresenceTransition>

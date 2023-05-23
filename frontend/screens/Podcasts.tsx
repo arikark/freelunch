@@ -3,7 +3,6 @@ import { Heading, SectionList, useColorMode } from 'native-base'
 import { z } from 'zod'
 
 import { Layout } from '../components/Layout'
-import { LoadingScreen } from '../components/LoadingScreen'
 import { PodcastMenuItem } from '../components/PodcastMenuItem'
 import { useGetContent } from '../hooks/useGetContent'
 import { PodcastStackScreenProps } from '../types'
@@ -128,12 +127,8 @@ export default function Podcasts({
     },
   ]
 
-  if (isLoading) {
-    return <LoadingScreen />
-  }
-
   return (
-    <Layout>
+    <Layout isLoading={isLoading} error={error}>
       <Heading>Podcasts</Heading>
 
       <SectionList

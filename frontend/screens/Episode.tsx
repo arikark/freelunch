@@ -16,7 +16,6 @@ import {
 import { z } from 'zod'
 
 import { Layout } from '../components/Layout'
-import { LoadingScreen } from '../components/LoadingScreen'
 import { PlayButton } from '../components/PlayButton'
 import { useGetContent } from '../hooks/useGetContent'
 import { PodcastStackScreenProps } from '../types'
@@ -60,39 +59,37 @@ export default function Episode({
   )
   const [isFullDescription, setIsFullDescription] = useState(false)
 
-  if (isLoading) {
-    return <LoadingScreen />
-  }
+  const formattedDate = moment(episode?.durationInSeconds).fromNow()
+  // Format time as 1 hour and 20 minutes left
+  const timeRemaining = episode
+    ? moment
+        // .duration(episode.durationInSeconds - episode.secondsPlayed, 'seconds')
+        .duration(episode.durationInSeconds - 10, 'seconds')
+        .humanize()
+    : ''
 
-  if (episode) {
-    const formattedDate = moment(episode?.durationInSeconds).fromNow()
-    // Format time as 1 hour and 20 minutes left
-    const timeRemaining = moment
-      // .duration(episode.durationInSeconds - episode.secondsPlayed, 'seconds')
-      .duration(episode.durationInSeconds - 10, 'seconds')
-      .humanize()
+  const isLongDescription = episode ? episode.description.length > 200 : false
+  const description =
+    isLongDescription && !isFullDescription
+      ? `${episode?.description.slice(0, 200)}...`
+      : episode?.description
 
-    const isLongDescription = episode.description.length > 200
-    const description =
-      isLongDescription && !isFullDescription
-        ? `${episode.description.slice(0, 200)}...`
-        : episode.description
-
-    return (
-      <Layout>
-        <HStack alignItems="center" mb={8}>
-          <IconButton
-            p={0}
-            size="lg"
-            accessibilityLabel="Go back"
-            icon={<ChevronLeftIcon />}
-            onPress={() => navigation.goBack()}
-          />
-        </HStack>
-        <VStack h="78%" justifyContent="space-between">
+  return (
+    <Layout isLoading={isLoading} error={error}>
+      <HStack alignItems="center" mb={8}>
+        <IconButton
+          p={0}
+          size="lg"
+          accessibilityLabel="Go back"
+          icon={<ChevronLeftIcon />}
+          onPress={() => navigation.goBack()}
+        />
+      </HStack>
+      {episode && (
+        <VStack h="78%" justifyContent="space-between" pb={20}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <VStack justifyContent="space-between">
-              <VStack minH="200px" justifyContent="space-between">
+              <VStack minH="250px" justifyContent="space-between">
                 <Box>
                   <Image
                     borderRadius={8}
@@ -110,7 +107,7 @@ export default function Episode({
                     fontSize={10}
                   >{`${formattedDate} • ${timeRemaining} left`}</Text>
                 </Box>
-                <Box width="88px" minH="50px" justifyContent="center">
+                <Box width="88px" minH="55px" justifyContent="center">
                   <PlayButton
                     variant="button"
                     track={{
@@ -156,8 +153,7 @@ export default function Episode({
             <ChevronRightIcon as="go to episodes" />
           </Pressable>
         </VStack>
-      </Layout>
-    )
-  }
-  return null
+      )}
+    </Layout>
+  )
 }

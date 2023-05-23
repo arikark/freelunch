@@ -7,13 +7,11 @@ import {
   Heading,
   HStack,
   IconButton,
-  Text,
 } from 'native-base'
 import { z } from 'zod'
 
 import { EpisodeMenuItem } from '../components/EpisodeMenuItem'
 import { Layout } from '../components/Layout'
-import { LoadingScreen } from '../components/LoadingScreen'
 import { useGetContent } from '../hooks/useGetContent'
 import { PodcastStackScreenProps } from '../types'
 
@@ -84,26 +82,18 @@ export default function Episodes({
     data: podcast,
   } = useGetContent<typeof episodesZ>(`podcast ${podcastId}`, episodesZ, query)
 
-  if (isLoading) {
-    return <LoadingScreen />
-  }
-
-  if (error) {
-    return <Text>{JSON.stringify(error, null, 2)}</Text>
-  }
-
-  if (podcast) {
-    return (
-      <Layout>
-        <HStack alignItems="center">
-          <IconButton
-            icon={<ChevronLeftIcon />}
-            onPress={() => navigation.goBack()}
-            mr={4}
-            accessibilityLabel="Go back"
-          />
-          <Heading>{podcast?.name}</Heading>
-        </HStack>
+  return (
+    <Layout isLoading={isLoading} error={error}>
+      <HStack alignItems="center">
+        <IconButton
+          icon={<ChevronLeftIcon />}
+          onPress={() => navigation.goBack()}
+          mr={4}
+          accessibilityLabel="Go back"
+        />
+        <Heading>{podcast?.name}</Heading>
+      </HStack>
+      {podcast && (
         <FlatList
           data={podcast.episodes}
           renderItem={({ item, index }) => (
@@ -126,8 +116,7 @@ export default function Episodes({
           showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => item._id.toString()}
         />
-      </Layout>
-    )
-  }
-  return <Text>Loading...</Text>
+      )}
+    </Layout>
+  )
 }

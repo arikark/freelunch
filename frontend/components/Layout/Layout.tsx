@@ -1,6 +1,24 @@
-import { Box, IBoxProps } from 'native-base'
+import { ReactNode } from 'react'
+import { Box } from 'native-base'
 
-export function Layout({ children }: IBoxProps) {
+import { LoadingScreen } from '../LoadingScreen'
+
+export function Layout({
+  children,
+  isLoading,
+  error,
+}: {
+  children: ReactNode
+  isLoading?: boolean
+  error?: Error | null
+}) {
+  if (error) {
+    return <Box>{JSON.stringify(error, null, 2)} </Box>
+  }
+  if (isLoading) {
+    return <LoadingScreen />
+  }
+
   return (
     <Box
       h="100%"

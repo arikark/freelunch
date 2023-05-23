@@ -47,7 +47,6 @@ export function PlayButton({
   return (
     <Button
       variant={variant === 'icon' ? 'ghost' : 'solid'}
-      onFocus={() => console.log('hi', track.trackName)}
       accessibilityLabel={track.trackURL}
       colorScheme="blue"
       rounded="2xl"
