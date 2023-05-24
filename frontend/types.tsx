@@ -21,6 +21,11 @@ export type ProfileStackParamList = {
   Favourites: undefined
 }
 
+export type AuthStackParamList = {
+  Login: undefined
+  Register: undefined
+}
+
 export type RootTabParamList = {
   PodcastStack: NavigatorScreenParams<PodcastStackParamList> | undefined
   ProfileStack: NavigatorScreenParams<ProfileStackParamList> | undefined
@@ -28,6 +33,7 @@ export type RootTabParamList = {
 
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined
+  AuthStack: NavigatorScreenParams<AuthStackParamList> | undefined
   Modal: undefined
   NotFound: undefined
 }
@@ -60,6 +66,10 @@ export type ProfileStackScreenProps<
   >
 >
 
+// There will be no tab bar if the user is not logged in
+export type AuthStackScreenProps<Screen extends keyof AuthStackParamList> =
+  NativeStackScreenProps<AuthStackParamList, Screen>
+
 declare global {
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamList {}
@@ -67,5 +77,7 @@ declare global {
     interface RootParamList extends RootTabParamList {}
 
     interface RootParamList extends PodcastStackParamList {}
+
+    interface RootParamList extends AuthStackParamList {}
   }
 }

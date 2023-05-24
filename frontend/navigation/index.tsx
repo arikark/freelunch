@@ -32,6 +32,7 @@ import Player from '../screens/Player'
 import Podcasts from '../screens/Podcasts'
 import Profile from '../screens/Profile'
 import {
+  AuthStackParamList,
   PodcastStackParamList,
   ProfileStackParamList,
   RootStackParamList,
@@ -40,7 +41,28 @@ import {
 import LinkingConfiguration from './LinkingConfiguration'
 
 const PodcastNavigator = createNativeStackNavigator<PodcastStackParamList>()
+const AuthNavigator = createNativeStackNavigator<AuthStackParamList>()
 
+function PlaceHolder() {
+  return <Text>PlaceHolder</Text>
+}
+
+function AuthStack() {
+  return (
+    <AuthNavigator.Navigator initialRouteName="Login">
+      <AuthNavigator.Screen
+        name="Login"
+        component={PlaceHolder}
+        options={{ headerShown: false }}
+      />
+      <AuthNavigator.Screen
+        name="Register"
+        component={PlaceHolder}
+        options={{ headerShown: false }}
+      />
+    </AuthNavigator.Navigator>
+  )
+}
 function PodcastsStack() {
   return (
     <PodcastNavigator.Navigator initialRouteName="Podcasts">
@@ -261,27 +283,40 @@ function BottomTabNavigator() {
  * https://reactnavigation.org/docs/modal
  */
 const Stack = createNativeStackNavigator<RootStackParamList>()
+const signedIn = false
 
 function RootNavigator() {
+  if (signedIn) {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Root"
+          component={BottomTabNavigator}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="NotFound"
+          component={NotFoundScreen}
+          options={{ title: 'Oops!' }}
+        />
+        <PodcastNavigator.Group screenOptions={{ presentation: 'modal' }}>
+          <PodcastNavigator.Screen
+            name="Player"
+            component={Player}
+            options={{ headerShown: false }}
+          />
+        </PodcastNavigator.Group>
+      </Stack.Navigator>
+    )
+  }
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Root"
-        component={BottomTabNavigator}
+        name="AuthStack"
+        component={AuthStack}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="NotFound"
-        component={NotFoundScreen}
-        options={{ title: 'Oops!' }}
-      />
-      <PodcastNavigator.Group screenOptions={{ presentation: 'modal' }}>
-        <PodcastNavigator.Screen
-          name="Player"
-          component={Player}
-          options={{ headerShown: false }}
-        />
-      </PodcastNavigator.Group>
     </Stack.Navigator>
   )
 }
