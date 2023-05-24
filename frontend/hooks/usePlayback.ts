@@ -6,6 +6,7 @@ import {
   InterruptionModeIOS,
 } from 'expo-av'
 
+import { writeUserData } from '../api/firebase'
 import { Track, usePlaybackStore } from './usePlaybackStore'
 
 export const usePlayback = () => {
@@ -20,10 +21,17 @@ export const usePlayback = () => {
       interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
       playThroughEarpieceAndroid: false,
     })
-    // if (playback.trackURL) {
-    //   loadNewPlaybackInstance(playback.isPlaying, playback.trackURL)
-    // }
+
+    if (playback.track && playback.playbackInstance) {
+      // only write every 5 seconds
+      writeUserData({
+        userId: '123',
+        episodeId: playback.track.trackId,
+        positionMillis: playback.positionMillis,
+      })
+    }
   }, [playback])
+
   const [shouldPlayAtEndOfSeek, setShouldPlayAtEndOfSeek] =
     useState<boolean>(false)
 
@@ -41,6 +49,7 @@ export const usePlayback = () => {
       playback.setIsPaused(!status.isPlaying)
       playback.setIsPlaying(status.isPlaying)
       playback.setLoadedSoundURL(status.uri)
+      playback.setPositionMillis(status.positionMillis)
     } else if (status.error) {
       console.log(`FATAL PLAYER ERROR: ${status.error}`)
     }

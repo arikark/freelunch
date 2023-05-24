@@ -1,6 +1,7 @@
 {
   "projects": {
-    "production": "free-lunch-media"
+    "production": "free-lunch-media",
+    "default": "free-lunch-media"
   },
   "targets": {},
   "etags": {}

@@ -5,6 +5,7 @@ import {
   FIREBASE_MEASUREMENT_ID,
   FIREBASE_MESSAGING_SENDER_ID,
   FIREBASE_PROJECT_ID,
+  FIREBASE_REALTIME_DATABASE_URL,
   FIREBASE_STORAGE_BUCKET,
   SENTRY_DSN,
 } from '@env'
@@ -20,6 +21,7 @@ const configZ = z.object({
     messagingSenderId: z.string(),
     appId: z.string(),
     measurementId: z.string(),
+    databaseURL: z.string(),
   }),
   sentry: z.object({
     dsn: z.string(),
@@ -38,6 +40,9 @@ export const config: z.infer<typeof configZ> = {
     appId: process.env.FIREBASE_APP_ID || FIREBASE_APP_ID,
     measurementId:
       process.env.FIREBASE_MEASUREMENT_ID || FIREBASE_MEASUREMENT_ID,
+    databaseURL:
+      process.env.FIREBASE_REALTIME_DATABASE_URL ||
+      FIREBASE_REALTIME_DATABASE_URL,
   },
   sentry: {
     dsn: process.env.SENTRY_DSN || SENTRY_DSN,

@@ -10,4 +10,5 @@ declare module '@env' {
   export const FIREBASE_MEASUREMENT_ID: string
   export const FIREBASE_DEVE_SERVER_PORT: string
   export const SENTRY_DSN: string
+  export const FIREBASE_REALTIME_DATABASE_URL: string
 }
