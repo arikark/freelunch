@@ -5,13 +5,13 @@ module.exports = {
     slug: 'FreeLunch',
     version: '1.0.0',
     orientation: 'portrait',
-    icon: './assets/images/icon.png',
+    icon: './assets/images/logo_mono_white_graphic.png',
     scheme: 'myapp',
     userInterfaceStyle: 'automatic',
     splash: {
-      image: './assets/images/splash.png',
+      image: './assets/images/logo_mono_white_graphic.png',
       resizeMode: 'contain',
-      backgroundColor: '#ffffff',
+      backgroundColor: '#312e81',
     },
     updates: {
       fallbackToCacheTimeout: 0,
@@ -27,7 +27,7 @@ module.exports = {
     android: {
       adaptiveIcon: {
         foregroundImage: './assets/images/adaptive-icon.png',
-        backgroundColor: '#ffffff',
+        backgroundColor: '#312e81',
       },
     },
     web: {
@@ -46,8 +46,7 @@ module.exports = {
           config: {
             organization: 'freelunchmedia',
             project: 'mobile',
-            authToken:
-              'bc2db121964c401bacfe31dd88f756252c07349d11d74a86ace9576f3f8850e4',
+            authToken: process.env.SENTRY_AUTH_TOKEN,
           },
         },
       ],

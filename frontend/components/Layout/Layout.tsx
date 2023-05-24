@@ -100,7 +100,18 @@ export function Layout({
     )
   }
   if (isLoading) {
-    return <LoadingScreen />
+    return (
+      <Box
+        h="100%"
+        paddingX={4}
+        paddingTop={4}
+        safeAreaTop
+        safeAreaX
+        variant="layout"
+      >
+        <LoadingScreen />
+      </Box>
+    )
   }
 
   return (

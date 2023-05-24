@@ -1,9 +1,7 @@
 {
   "build": {
     "preview": {
-      "ios": {
-        "simulator": true
-      }
+      "distribution": "internal"
     },
     "production": {}
   }
