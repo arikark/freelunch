@@ -284,42 +284,40 @@ function BottomTabNavigator() {
  * https://reactnavigation.org/docs/modal
  */
 const Stack = createNativeStackNavigator<RootStackParamList>()
-const signedIn = false
 
 function RootNavigator() {
-  if (signedIn) {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Root"
-          component={BottomTabNavigator}
-          options={{ headerShown: false }}
-        />
-
-        <Stack.Screen
-          name="NotFound"
-          component={NotFoundScreen}
-          options={{ title: 'Oops!' }}
-        />
-        <PodcastNavigator.Group screenOptions={{ presentation: 'modal' }}>
-          <PodcastNavigator.Screen
-            name="Player"
-            component={Player}
-            options={{ headerShown: false }}
-          />
-        </PodcastNavigator.Group>
-      </Stack.Navigator>
-    )
-  }
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="AuthStack"
-        component={AuthStack}
+        name="Root"
+        component={BottomTabNavigator}
         options={{ headerShown: false }}
       />
+
+      <Stack.Screen
+        name="NotFound"
+        component={NotFoundScreen}
+        options={{ title: 'Oops!' }}
+      />
+      <PodcastNavigator.Group screenOptions={{ presentation: 'modal' }}>
+        <PodcastNavigator.Screen
+          name="Player"
+          component={Player}
+          options={{ headerShown: false }}
+        />
+      </PodcastNavigator.Group>
     </Stack.Navigator>
   )
+
+  // return (
+  //   <Stack.Navigator>
+  //     <Stack.Screen
+  //       name="AuthStack"
+  //       component={AuthStack}
+  //       options={{ headerShown: false }}
+  //     />
+  //   </Stack.Navigator>
+  // )
 }
 
 export default function Navigation() {

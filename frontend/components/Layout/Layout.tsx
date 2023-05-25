@@ -4,6 +4,7 @@ import {
   Box,
   CloseIcon,
   HStack,
+  IBoxProps,
   IconButton,
   Slide,
   Text,
@@ -75,11 +76,12 @@ export function Layout({
   children,
   isLoading,
   error,
+  ...props
 }: {
   children: ReactNode
   isLoading?: boolean
   error?: Error | null
-}) {
+} & IBoxProps) {
   const [show, setShow] = useState(true)
   const onDismiss = () => {
     setShow(false)
@@ -94,6 +96,7 @@ export function Layout({
         safeAreaTop
         safeAreaX
         variant="layout"
+        {...props}
       >
         <ErrorAlert onDismiss={onDismiss} show={show} />
       </Box>
@@ -107,7 +110,7 @@ export function Layout({
         paddingTop={4}
         safeAreaTop
         safeAreaX
-        variant="layout"
+        {...props}
       >
         <LoadingScreen />
       </Box>
@@ -122,6 +125,7 @@ export function Layout({
       safeAreaTop
       safeAreaX
       variant="layout"
+      {...props}
     >
       {children}
     </Box>
