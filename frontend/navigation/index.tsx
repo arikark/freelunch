@@ -26,20 +26,18 @@ import { PlayButton } from '../components/PlayButton/PlayButton'
 import { usePlaybackStore } from '../hooks/usePlaybackStore'
 import Episode from '../screens/Episode'
 import Episodes from '../screens/Episodes'
-import Favourites from '../screens/Favourites'
 import { LoginScreen } from '../screens/Login'
 import NotFoundScreen from '../screens/NotFoundScreen'
 import Player from '../screens/Player'
 import Podcasts from '../screens/Podcasts'
-import Profile from '../screens/Profile'
 import {
   AuthStackParamList,
   PodcastStackParamList,
-  ProfileStackParamList,
   RootStackParamList,
   RootTabParamList,
 } from '../types'
 import LinkingConfiguration from './LinkingConfiguration'
+import { ProfileNavigator } from './ProfileNavigator/ProfileNavigator'
 
 const PodcastNavigator = createNativeStackNavigator<PodcastStackParamList>()
 const AuthNavigator = createNativeStackNavigator<AuthStackParamList>()
@@ -83,26 +81,6 @@ function PodcastsStack() {
         options={{ headerShown: false }}
       />
     </PodcastNavigator.Navigator>
-  )
-}
-const ProfileNavigator = createNativeStackNavigator<ProfileStackParamList>()
-
-function ProfileStack() {
-  return (
-    <ProfileNavigator.Navigator initialRouteName="Profile">
-      <ProfileNavigator.Screen
-        name="Profile"
-        component={Profile}
-        options={{ headerShown: false }}
-      />
-      <ProfileNavigator.Screen
-        name="Favourites"
-        component={Favourites}
-        options={{
-          headerShown: false,
-        }}
-      />
-    </ProfileNavigator.Navigator>
   )
 }
 
@@ -273,7 +251,7 @@ function BottomTabNavigator() {
             <TabBarIcon name="user" color={color} opacity={focused ? 1 : 0.5} />
           ),
         }}
-        component={ProfileStack}
+        component={ProfileNavigator}
       />
     </BottomTab.Navigator>
   )

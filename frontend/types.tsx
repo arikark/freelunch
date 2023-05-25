@@ -4,6 +4,7 @@
  */
 
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
 import {
   CompositeScreenProps,
   NavigatorScreenParams,
@@ -17,8 +18,10 @@ export type PodcastStackParamList = {
   Episode: { title: string; episodeId: string }
 }
 export type ProfileStackParamList = {
-  Profile: undefined
-  Favourites: undefined
+  Overview: undefined
+  Record: undefined
+  Certificates: undefined
+  Compliance: undefined
 }
 
 export type AuthStackParamList = {
@@ -49,13 +52,15 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
 
 export type PodcastStackScreenProps<
   Screen extends keyof PodcastStackParamList
-> = CompositeScreenProps<
-  NativeStackScreenProps<PodcastStackParamList, Screen>,
-  CompositeScreenProps<
-    BottomTabScreenProps<RootTabParamList, 'PodcastStack'>,
-    NativeStackScreenProps<RootStackParamList>
+  > = CompositeScreenProps<
+    NativeStackScreenProps<PodcastStackParamList, Screen>,
+    CompositeScreenProps<
+      BottomTabScreenProps<RootTabParamList, 'PodcastStack'>,
+      NativeStackScreenProps<RootStackParamList>
+      MaterialTopTabScreenProps<RootTabParamList, 'PodcastStack'>
+
+    >
   >
->
 export type ProfileStackScreenProps<
   Screen extends keyof ProfileStackParamList
 > = CompositeScreenProps<
