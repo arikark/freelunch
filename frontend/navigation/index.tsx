@@ -27,6 +27,7 @@ import { usePlaybackStore } from '../hooks/usePlaybackStore'
 import Episode from '../screens/Episode'
 import Episodes from '../screens/Episodes'
 import Favourites from '../screens/Favourites'
+import { LoginScreen } from '../screens/Login'
 import NotFoundScreen from '../screens/NotFoundScreen'
 import Player from '../screens/Player'
 import Podcasts from '../screens/Podcasts'
@@ -52,7 +53,7 @@ function AuthStack() {
     <AuthNavigator.Navigator initialRouteName="Login">
       <AuthNavigator.Screen
         name="Login"
-        component={PlaceHolder}
+        component={LoginScreen}
         options={{ headerShown: false }}
       />
       <AuthNavigator.Screen
