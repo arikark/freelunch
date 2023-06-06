@@ -6,6 +6,7 @@ import {
 import { Center, Pressable, Text } from 'native-base'
 
 import { Layout } from '../../components/Layout'
+import { Overview } from '../../screens/Profile'
 
 function TopTabBar({
   state,
@@ -70,11 +71,7 @@ function TopTabBar({
     </View>
   )
 }
-const Overview = () => (
-  <Center h="100%">
-    <Text>Overview</Text>
-  </Center>
-)
+
 const CPDRecord = () => (
   <Center h="100%">
     <Text>Record</Text>
