@@ -45,7 +45,7 @@ export function PodcastMenuItem({
 
   return (
     <Pressable
-      onPress={() => navigate('Episodes', { title, podcastId: id })}
+      onPress={() => navigate('Episodes', { podcastId: id })}
       {...props}
     >
       {({ isHovered, isFocused, isPressed }) => {

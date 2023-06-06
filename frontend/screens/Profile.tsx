@@ -86,7 +86,9 @@ const renderTabBar = (
 
 export default function Profile({
   navigation,
-}: ProfileStackScreenProps<'Profile'>) {
+}: ProfileStackScreenProps<
+  'Overview' | 'Record' | 'Certificates' | 'Compliance'
+>) {
   const [index, setIndex] = useState(0)
   const [routes] = useState([
     {

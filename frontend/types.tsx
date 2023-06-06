@@ -52,22 +52,21 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
 
 export type PodcastStackScreenProps<
   Screen extends keyof PodcastStackParamList
-  > = CompositeScreenProps<
-    NativeStackScreenProps<PodcastStackParamList, Screen>,
-    CompositeScreenProps<
-      BottomTabScreenProps<RootTabParamList, 'PodcastStack'>,
-      NativeStackScreenProps<RootStackParamList>
-      MaterialTopTabScreenProps<RootTabParamList, 'PodcastStack'>
-
-    >
+> = CompositeScreenProps<
+  NativeStackScreenProps<PodcastStackParamList, Screen>,
+  CompositeScreenProps<
+    BottomTabScreenProps<RootTabParamList, 'PodcastStack'>,
+    NativeStackScreenProps<RootStackParamList>
   >
+>
+
 export type ProfileStackScreenProps<
   Screen extends keyof ProfileStackParamList
 > = CompositeScreenProps<
   NativeStackScreenProps<ProfileStackParamList, Screen>,
   CompositeScreenProps<
     BottomTabScreenProps<RootTabParamList, 'ProfileStack'>,
-    NativeStackScreenProps<RootStackParamList>
+    MaterialTopTabScreenProps<RootTabParamList>
   >
 >
 
